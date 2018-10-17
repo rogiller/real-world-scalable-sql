@@ -174,24 +174,61 @@
 
 						We found JOOQ and fell in love. Er, at least some of us did.
 
-						It has a builder pattern that is really powerful, if a bit not-awesome to read.
+						It has a builder pattern that is really powerful, if a bit non-awesome to read.
 
-						Spring Data is our default GOTO until the problem feels like JOOQ.
+						Spring Data is our default GOTO until the problem feels like JOOQ land.
 					</section>
 				</section>
 
+				<section>
+					<section>Is it working?</section>
+					<section data-markdown>
+						By and large, it's been a huge success in terms of speed.
 
+						We still have to watch out for database round trips.
 
+						We'll normally bag up some ID's and fetch all at once, etc.
+					</section>
+					<section data-markdown>
+						We use a SPARSE select often.
 
+						We have a bunch of tables that have 100's of columns.
+
+						We'll do a sparse "use case select".
+
+						e.g. "findSparseByIdForPrepProcess"
+					</section>
+					<section data-markdown>
+						We use recursive database functions.
+
+						They help us locate id sets for parent/child relation ships.
+					</section>
+				</section>
 
 				<section>
+					<section>How does the our data layer translate to JSON?</section>
+					<section data-markdown>
+						The beauty of this approach is that we have no domain/DTO translation layer.
+
+						The data comes out lean from the database.
+
+						Our entities serialize directly out across the wire.
+					</section>
+				</section>
+
+				<section>
+					<section>Any questions?</section>
+					<section>Thanks for listening!</section>
+				</section>
+
+				<!--section>
 					<section data-markdown>
 						```groovy
 						def tempString = "JavaScript syntax highlighting"
 						println(tempString)
 						```
 					</section>
-				</section>
+				</section-->
 			</div>
 		</div>
 
