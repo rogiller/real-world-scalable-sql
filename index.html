@@ -42,10 +42,13 @@
 						been @ Flex since 2009
 					</section>
 					<section data-markdown>
+						up the ranks...
+
 						developer, senior developer, technical lead...
 
-						you get the idea
-
+						you get the idea.
+					</section>
+					<section data-markdown>
 						now I just harass JC, Matt, Suman, & Bryon about their code
 					</section>
 					<section data-markdown>
@@ -85,12 +88,13 @@
 						Gigantic SQL selects (think 50MB for a single Quote line update).
 
 						N+1 selects (often from lazy loaded collections).
-
-						Impossible Hibernate Collection bugz.
 					</section>
 					<section data-markdown>
-						Database IO counts through the roof.
+						Impossible Hibernate Collection bugz.
 
+						Database IO counts through the roof.
+					</section>
+					<section data-markdown>
 						Database timeout/locks from high load.
 
 						Massive memory usage due to large amounts of data in memory per request.
@@ -99,23 +103,20 @@
 
 				<section>
 					<section>How did we try to fix it?</section>
+					<section>Hibernate 2nd level cache</section>
 					<section data-markdown>
-						Hibernate 2nd level cache
-
 						This might have helped, but my gut is that it ended up hurting more than it helped.
 
 						In areas of high churn, you can get a lot of cache misses, leading to even worse N+1 situations.
 					</section>
+					<section>Hibernate Collection Batching</section>
 					<section data-markdown>
-						Hibernate Collection Batching
-
 						This was probably the most successful performance tweak.
 
 						It helps avoid N+1 selects by loading multiple collections in one database trip.
 					</section>
+					<section>Native SQL</section>
 					<section data-markdown>
-						Native SQL
-
 						Often we just gave up on Hibernate and hand coded SQL.
 					</section>
 					<section data-markdown>
@@ -149,7 +150,8 @@
 						We knew Hibernate needed constrained.
 
 						Started with lighter entities with relations pointing to an "identity" class to avoid "web out".
-
+					</section>
+					<section data-markdown>
 						Eventually screwed that and went with straight up "row to object" model.
 					</section>
 					<section data-markdown>
@@ -163,7 +165,8 @@
 					<section>Spring Data</section>
 					<section data-markdown>
 						Spring Data was our starter data layer.
-
+					</section>
+					<section data-markdown>
 						It has some really cool abstractions.
 
 						Really good at getting records to/from database.
@@ -190,7 +193,8 @@
 						By and large, it's been a huge success in terms of speed.
 
 						We still have to watch out for database round trips.
-
+					</section>
+					<section data-markdown>
 						We'll normally bag up some ID's and fetch all at once, etc.
 					</section>
 					<section data-markdown>
@@ -214,7 +218,8 @@
 					<section>How does the our data layer translate to JSON?</section>
 					<section data-markdown>
 						The beauty of this approach is that we have no domain/DTO translation layer.
-
+					</section>
+					<section data-markdown>
 						The data comes out lean from the database.
 
 						Our entities serialize directly out across the wire.
