@@ -59,6 +59,8 @@
 
 					[https://rogiller.github.io/real-world-scalable-sql/](https://rogiller.github.io/real-world-scalable-sql/)
 				</section>
+
+
 				<section>
 					<section>Where does this story begin?</section>
 					<section>Let's talk about Flex4</section>
@@ -76,6 +78,55 @@
 					<section>For those unfamiliar with object graphs, let me show you some Flex4 code.</section>
 					<section>ProjectElement, ProjectElementLineItem</section>
 				</section>
+
+				<section>
+					<section>What did this object graph lead to?</section>
+					<section data-markdown>
+						Gigantic SQL selects (think 50MB for a single Quote line update).
+
+						N+1 selects (often from lazy loaded collections).
+
+						Impossible Hibernate Collection bugz.
+
+						Database IO counts through the roof.
+
+						Database timeout/locks from high load.
+
+						Massive memory usage due to large amounts of data in memory per request.
+					</section>
+				</section>
+
+				<section>
+					<section>How did we try to fix it?</section>
+					<section data-markdown>
+						Hibernate 2nd level cache
+
+						This might have helped, but my gut is that it ended up hurting more than it helped.
+
+						In areas of high churn, you can get a lot of cache misses, leading to even worse N+1 situations.
+					</section>
+					<section data-markdown>
+						Hibernate Collection Batching
+
+						This was probably the most successful performance tweak.
+
+						It helps avoid N+1 selects by loading multiple collections in one database trip.
+					</section>
+					<section data-markdown>
+						Native SQL
+
+						Often we just gave up on Hibernate and hand coded SQL.
+					</section>
+					<section data-markdown>
+						Ad Hoc Caches in hotspot areas.
+					</section>
+					<section data-markdown>
+						Tried to trim down object graph.
+
+						Mostly failed. Ripples out to far.
+					</section>
+				</section>
+
 
 				<section>
 					<section data-markdown>
