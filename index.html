@@ -127,6 +127,62 @@
 					</section>
 				</section>
 
+				<section>
+					<section>What was the solution?</section>
+					<section>After much debate, we realized the Flex4 backend was fundamentally unscalable.</section>
+					<section data-markdown>
+						New Backend Was Needed
+
+						We started a new Spring Boot/Data/Security backend on top of then existing database.
+
+						It now works in paralel with the Flex4 backend.
+
+						How we got the two systems to play nice together is a story for another day.
+					</section>
+				</section>
+
+				<section>
+					<section>How did we architect the data layer?</section>
+					<section data-markdown>
+						We knew Hibernate needed constrained.
+
+						Started with lighter entities with relations pointing to an "identity" class to avoid "web out".
+
+						Eventually screwed that and went with straight up "row to object" model.
+
+						No @ManyToOne, @OneToMany, no collections, nothing.
+
+						Just straight up @Column, period.
+					</section>
+				</section>
+
+				<section>
+					<section>Spring Data</section>
+					<section data-markdown>
+						Spring Data was our starter data layer.
+
+						It has some really cool abstractions.
+
+						Really good at getting records to/from database.
+					</section>
+				</section>
+
+				<section>
+					<section>JOOQ</section>
+					<section data-markdown>
+						Spring Data has limits in terms of criteria based query building.
+
+						We found JOOQ and fell in love. Er, at least some of us did.
+
+						It has a builder pattern that is really powerful, if a bit not-awesome to read.
+
+						Spring Data is our default GOTO until the problem feels like JOOQ.
+					</section>
+				</section>
+
+
+
+
 
 				<section>
 					<section data-markdown>
