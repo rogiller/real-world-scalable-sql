@@ -149,16 +149,49 @@
 					<section data-markdown>
 						We knew Hibernate needed constrained.
 
-						Started with lighter entities with relations pointing to an "identity" class to avoid "web out".
+						Started with lighter entities with relations pointing
+						to an "identity" class to avoid "web out".
 					</section>
 					<section data-markdown>
-						Eventually screwed that and went with straight up "row to object" model.
+						Eventually screwed that and went with
+						straight up "row to object" model.
 					</section>
 					<section data-markdown>
-						No @ManyToOne, @OneToMany, no collections, nothing.
+						No @ManyToOne, @OneToMany,
+						no collections, nothing.
 
 						Just straight up @Column, period.
 					</section>
+					<section data-markdown>
+						Flex5 Entity Example
+						```groovy
+						@Entity
+						@Table(name = Department.TABLE_NAME)
+						class Department extends NameAuditEntity implements BusinessModel {
+							public static final String TABLE_NAME = "st_biz_department"
+
+							static class COLUMNS {
+								public static final String DEPT_NAME = "dept_name"
+								public static final String DEPT_CODE = "dept_code"
+								public static final String ABBREVIATION = "abbreviation"
+								public static final String ACCOUNTING_NAME = "accounting_name"
+							}
+
+							@Column(name = COLUMNS.DEPT_NAME, length = 128)
+							String name
+
+							@Column(name = COLUMNS.DEPT_CODE, length = 32)
+							String code
+
+							@Column(name = COLUMNS.ABBREVIATION, length = 16)
+							String abbreviation
+
+							@Column(name = COLUMNS.ACCOUNTING_NAME, length = 128)
+							String accountingName
+						}
+						```
+					</section>
+
 				</section>
 
 				<section>
