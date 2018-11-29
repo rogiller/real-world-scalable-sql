@@ -202,7 +202,7 @@
 					<section>sql2o Example</section>
 					<section data-markdown>
 						```java
-						public List&lt;Customer&gt fetchCustomers(customerId) {
+						public List&lt;Customer&gt; etchCustomers(customerId) {
 							try (Connection con = sql2o.open()) {
 								final String query =
 									"SELECT id, name, address " +
@@ -219,6 +219,34 @@
 						Way way to much boilerplate.
 
 						You should NOT need a method body for normal record to POJO. Period.
+					</section>
+				</section>
+
+				<section>
+					<section>JdbcTemplate Example</section>
+					<section data-markdown>
+						```groovy
+							List&lt;Permission&gt; findPermissionsForUser(String userId){
+
+								if(StringUtils.isBlank(userId)){
+									return Collections.emptyList()
+								}
+
+								userId = StringUtils.trim(userId)
+
+								return jdbcTemplate.query('SELECT permission AS name, denied AS denied FROM rh_user_permissions WHERE userprofileid = ?', new RowMapper&lt;Permission&gt;() {
+									@Override
+									Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
+										return new Permission(name: rs.getString('name'), denied: rs.getBoolean("denied"))
+									}
+								}, userId)
+							}
+						```
+					</section>
+					<section data-markdown>
+						Yuck.
+
+						Repeat after me. YOU SHOULD NOT HAVE TO MANUALLY MAP YOUR RESULTS. PERIOD.
 					</section>
 				</section>
 
