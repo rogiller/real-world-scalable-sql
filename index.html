@@ -141,6 +141,8 @@
 						It now works in paralel with the Flex4 backend.
 
 						How we got the two systems to play nice together is a story for another day.
+
+						Spoiler: Just Google "Hazelcast".
 					</section>
 				</section>
 
@@ -194,6 +196,64 @@
 
 				</section>
 
+				<section>Basically nobody does data access right.</section>
+
+				<section>
+					<section>sql2o Example</section>
+					<section data-markdown>
+						```java
+						public List&lt;Customer&gt fetchCustomers(customerId) {
+							try (Connection con = sql2o.open()) {
+								final String query =
+									"SELECT id, name, address " +
+									"FROM customers WHERE id = :customerId";
+
+								return con.createQuery(query)
+									.addParameter("customerId", customerId)
+									.executeAndFetch(Customer.class);
+							}
+						}
+						```
+					</section>
+					<section data-markdown>
+						Way way to much boilerplate.
+
+						You should NOT need a method body for normal record to POJO. Period.
+					</section>
+				</section>
+
+				<section>
+					<section>JDBI Example</section>
+					<section data-markdown>
+						```java
+						@SqlUpdate("INSERT INTO user(id, name) VALUES (:id, :name)")
+						void insertNamed(@Bind("id") int id, @Bind("name") String name);
+
+						@SqlUpdate("INSERT INTO user(id, name) VALUES (:id, :name)")
+						void insertBean(@BindBean User user);
+
+						@SqlQuery("SELECT * FROM user ORDER BY name")
+						@RegisterBeanMapper(User.class)
+						List&lt;User&gt; listUsers();
+						```
+					</section>
+					<section data-markdown>
+						Nope still to much boilerplate. `@RegisterBeanMapper(User.class)` makes me shiver.
+					</section>
+				</section>
+
+				<section>
+					So what makes a great data layer tool?
+
+
+					The absolute minimal boilerplate possible.
+
+
+					It should allow you to focus on your actual query and almost nothing else.
+				</section>
+
+				<section>The tools we picked.</section>
+
 				<section>
 					<section>Spring Data</section>
 					<section data-markdown>
@@ -203,6 +263,40 @@
 						It has some really cool abstractions.
 
 						Really good at getting records to/from database.
+					</section>
+					<section data-markdown>
+						```groovy
+						@Query("SELECT o FROM SalesTaxRuleIdentity AS o ORDER BY o.name ASC")
+						List&lt;SalesTaxRuleIdentity&gt; findAllIdentities()
+
+						@Query('''
+							SELECT ruleIdentity
+							FROM FinancialDocumentDefinitionEnabledSalesTaxRule AS enabledRule
+							INNER JOIN SalesTaxRuleIdentity AS ruleIdentity ON ruleIdentity.id = enabledRule.salesTaxRuleId
+							WHERE enabledRule.definitionId = ?1
+							ORDER BY ruleIdentity.name ASC
+						''')
+						List&lt;SalesTaxRuleIdentity&gt; findAllIdentitiesEnabledForDefinitionId(String enabledForDefinitionId)
+						```
+					</section>
+					<section>
+						What I like?
+						- Zero boilerplate.
+						- The target entity and it's corresponding property types are just figured out and hydrated.
+						- The parameters are just mapped in by ordinal (you can do named ones).
+						- You deal at the class level & property level.
+						- It's declarative and frickin' readable.
+						- The JPQL queries are validated at startup.
+					</section>
+					<section>
+						What I don't like?
+						- It's still uses Hibernate under the cover. Meh. Scar tissue.
+						- Session cache sucks when you have other data access tools in your app.
+						   - e.g. you insert with JOOQ, but JPA doesn't know.
+						- You have to explicitly flush for it to go the database (before the transaction ends).
+						- Generated SQL output is a bit ugly.
+						- You are 1 degree removed from SQL. Which is normally fine, until it isn't.
+						  - You want to use a SQL feature JQL doesn't support.
 					</section>
 				</section>
 
@@ -221,6 +315,33 @@
 						It has a builder pattern that is really powerful, if a bit non-awesome to read.
 
 						Spring Data is our default GOTO until the problem feels like JOOQ land.
+					</section>
+					<section data-markdown>
+						```groovy
+						List&lt;InventoryGroup&gt; findByParentGroupId(String parentId)  {
+							return jooq.select(ID, GROUP_NAME, FULL_DISPLAY_STRING, ICON_ID, MANAGEMENT_GROUP_ID)
+								.from(TABLE)
+								.where(equalToOrIsNull(PARENT_GROUP_ID, parentId))
+								.orderBy(ORDINAL, GROUP_NAME)
+								.fetchInto(InventoryGroup)
+						}
+						```
+					</section>
+					<section>
+						What I like?
+						- Powerful builder pattern.
+						- Perfect for dynamic queries.
+						- Fantastic reusability.
+						- Solid POJO mapping abilities (can interpret @Column JPA annotations).
+						- Type-safe SQL queries.
+					</section>
+					<section>
+						What I don't like?
+						- Hard to read large queries. aka more difficult to maintain.
+						- Requires a method body.
+						- Probably hard for a junior or new to JOOQ dev to grok.
+						- It wants you to use it's "generate jazz" feature which feels really messy.
+						  - We didn't. We created our own fields. Which takes up some time.
 					</section>
 				</section>
 
