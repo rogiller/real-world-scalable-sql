@@ -25,31 +25,25 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
+
+				<!-- TITLE -->
 				<section data-markdown>
 					<textarea data-template>
 						## Real World Scalable SQL
 
-						a real world story about building a scalable data layer
+						a story about building a scalable data layer
 					</textarea>
 				</section>
+
+				<!-- INTRO -->
 				<section>
 					<section>Who am I?</section>
 					<section data-markdown>
 						Roger Diller
 
-						I work for Flex Rental Solutions
+						Technical Lead @ Flex Rental Solutions
 
 						been @ Flex since 2009
-					</section>
-					<section data-markdown>
-						up the ranks...
-
-						developer, senior developer, technical lead...
-
-						you get the idea.
-					</section>
-					<section data-markdown>
-						now I just harass JC, Matt, Suman, & Bryon about their code
 					</section>
 					<section data-markdown>
 						Follow me on Twitter!
@@ -64,39 +58,98 @@
 				</section>
 
 				<section data-markdown>
-					Disclaimer.
+					This will be an opinionated talk. Because of scar tissue.
 
-					This will be a highly opinioted talk. Because of scar tissue.
-
-					Some of these opinions may not apply to your work.
+					Some of these opinions might not apply to your work.
 				</section>
 
+				<!-- FLEX4 CONTEXT -->
 				<section>
 					<section>Where does this story begin?</section>
-					<section>Let's talk about Flex4</section>
+					<section>Let's talk about Flex4 a bit</section>
 					<section data-markdown>
 						Legacy Spring/Hibernate/MySQL application
 
 						started in 2003'ish
-
-						Built rapidly w/o a lot of thought about maintainability
 					</section>
 					<section data-markdown>
+						Built rapidly w/o a lot of thought about maintainability or speed.
+
 						Large methods & classes (13,000+ line classes!)
-
-						It's worse part is it's immense object graph.
 					</section>
-					<section>For those unfamiliar with object graphs, let me show you some Flex4 code.</section>
-					<section>ProjectElement, ProjectElementLineItem</section>
-				</section>
-
-				<section>
-					<section>What did this object graph lead to?</section>
 					<section data-markdown>
-						Gigantic SQL selects (think 50MB for a single Quote line update).
+						It has a LOT of issues.
 
-						N+1 selects (often from lazy loaded collections).
+						But for the purpose of this talk, let's focus on the speed problem.
 					</section>
+					<section data-markdown>
+						I mentioned it's a Hibernate app.
+
+						BEGIN ORM/HIBERNATE HATE NOW.
+					</section>
+					<section data-markdown>
+						Hibernate is the problem right?! Just don't use it.
+
+						Nuff said, let's go home.
+					</section>
+					<section data-markdown>
+						Hibernate really isn't the core issue.
+
+						It's what you ask it do and being unaware of what it's doing.
+					</section>
+					<section data-markdown>
+						Yes, you could argue it's overcomplicated tool and is too hard to understand.
+
+						I can see that as a pretty good argument for not use it. But I'm not here to debate that.
+					</section>
+					<section data-markdown>
+						I AM suggesting that blaming Hibernate for your speed issues
+
+						is kinda like blaming the UPS for delivering you too many packages
+
+						when you did all the ordering.
+					</section>
+					<section data-markdown>
+						Hibernate is just doing what you asked.
+
+						It's up to you to ask it for reasonable things.
+					</section>
+					<section data-markdown>
+						So what is the core issue?
+					</section>
+					<section data-markdown>
+						It's your webby object graph.
+					</section>
+					<section>
+						For those unfamiliar what I mean by an object graph,
+						let me show you a Flex4 code example.
+					</section>
+					<section>show ProjectElement, ProjectElementLineItem classes</section>
+				</section>
+				<section>What did an object graph like this lead to?</section>
+				<section>
+					<section data-markdown>
+						Gigantic SQL selects (imagine 50MB of SQL for updating one column on a Quote line item).
+
+						aka as Hibernate hydrating a whole universe of objects
+					</section>
+					<section data-markdown>
+						Again not really Hibernate's fault.
+
+						You created the relationship mappings, it's doing what you asked.
+					</section>
+
+
+				</section>
+				<section data-markdown>
+					<section data-markdown>
+						N+1 selects (mainly from lazy loaded collections).
+					</section>
+
+
+
+
+
 					<section data-markdown>
 						Impossible Hibernate Collection bugz.
 
@@ -450,15 +503,6 @@
 					<section>Any questions?</section>
 					<section>Thanks for listening!</section>
 				</section>
-
-				<!--section>
-					<section data-markdown>
-						```groovy
-						def tempString = "JavaScript syntax highlighting"
-						println(tempString)
-						```
-					</section>
-				</section-->
 			</div>
 		</div>
 
