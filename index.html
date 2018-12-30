@@ -26,20 +26,9 @@
 		<div class="reveal">
 			<div class="slides">
 
-				<!-- TITLE -->
-				<section data-markdown>
-					<textarea data-template>
-						## Real World Scalable SQL
-
-						a story about building a scalable data layer
-					</textarea>
-				</section>
-				<section data-markdown>
-					Side Note, need more talks about solving problems we face in the day to day.
-				</section>
-
 				<!-- INTRO -->
 				<section>
+					<section>BEGIN.</section>
 					<section>Who am I?</section>
 					<section data-markdown>
 						Roger Diller
@@ -54,10 +43,24 @@
 						[@rogiller](https://twitter.com/rogiller)
 					</section>
 				</section>
+
+				<!-- TITLE -->
+				<section data-markdown>
+					<textarea data-template>
+						## Real World Scalable SQL
+
+						a story about building a scalable data layer
+					</textarea>
+				</section>
+
 				<section data-markdown>
 					This talk is on GitHub Pages now!
 
 					[https://rogiller.github.io/real-world-scalable-sql/](https://rogiller.github.io/real-world-scalable-sql/)
+				</section>
+
+				<section data-markdown>
+					Side Note, need more talks about solving problems we face in the day to day.
 				</section>
 
 				<section data-markdown>
@@ -498,9 +501,11 @@
 				</section>
 
 				<section>
-					<section>Any questions?</section>
+					<section>What questions do you have?</section>
 					<section>Thanks for listening!</section>
 				</section>
+
+				<section>END.</section>
 			</div>
 		</div>
 
@@ -514,7 +519,11 @@
 			Reveal.initialize({
                 // Push each slide change to the browser history
                 history: true,
-				dependencies: [
+                // Factor of the display size that should remain empty around the content
+                //margin: 1,
+                width: "95%",
+                height: "95%",
+                dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
