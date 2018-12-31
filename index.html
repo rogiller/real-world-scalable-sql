@@ -140,8 +140,8 @@
 					</section>
 					<section>show ProjectElement, ProjectElementLineItem classes</section>
 				</section>
-				<section>What did an object graph like this lead to?</section>
 				<section>
+					<section>What did an object graph like this lead to?</section>
 					<section data-markdown>
 						Gigantic SQL selects
 
@@ -154,10 +154,6 @@
 
 						You created the relationship mappings, it's doing what you asked.
 					</section>
-
-					<! -- LEFT OFF HERE -->
-				</section>
-				<section data-markdown>
 					<section data-markdown>
 						N+1 selects (mainly from lazy loaded collections).
 					</section>
@@ -179,7 +175,7 @@
 					<section data-markdown>
 						This might have helped, but my gut is that it ended up hurting more than it helped.
 
-						In areas of high churn, you can get a lot of cache misses, leading to even worse N+1 situations.
+						In areas of high churn, lotsa cache misses, leading to even more N+1.
 					</section>
 					<section>Hibernate Collection Batching</section>
 					<section data-markdown>
@@ -187,15 +183,23 @@
 
 						It helps avoid N+1 selects by loading multiple collections in one database trip.
 					</section>
-					<section>Native SQL</section>
 					<section data-markdown>
-						Often we just gave up on Hibernate and hand coded SQL.
+						Seriously, collection batching might be the best tip you take home.
+
+						See [https://docs.jboss.org/hibernate/...](https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#fetching-batch).
 					</section>
 					<section data-markdown>
-						Ad Hoc Caches in hotspot areas.
+						We tried native SQL....
+
+						Often we just gave up on Hibernate and hand coded the SQL.
+
+						[But then you really gotta watch for bizarre second level cache issues.]
 					</section>
 					<section data-markdown>
-						Tried to trim down object graph.
+						We built Ad Hoc Caches in hotspot areas.
+					</section>
+					<section data-markdown>
+						We tried to trim down object graph.
 
 						Mostly failed. Ripples out to far.
 					</section>
@@ -203,14 +207,22 @@
 
 				<section>
 					<section>What was the solution?</section>
-					<section>After much debate, we realized the Flex4 backend was fundamentally unscalable.</section>
 					<section data-markdown>
-						New Backend Was Needed
+						After much hand wringing...
 
-						We started a new Spring Boot/Data/Security backend on top of then existing database.
+						We realized the Flex4 backend was fundamentally unscalable.
 					</section>
 					<section data-markdown>
-						It now works in paralel with the Flex4 backend.
+						A New Backend Was Needed.
+
+						We started a new Spring Boot/Data/Security backend...
+
+						**on top of the existing database.**
+
+						Read [StranglerApplication](https://www.martinfowler.com/bliki/StranglerApplication.html)
+					</section>
+					<section data-markdown>
+						It now works in parallel with the Flex4 backend.
 
 						How we got the two systems to play nice together is a story for another day.
 
@@ -223,18 +235,17 @@
 					<section data-markdown>
 						We knew Hibernate needed constrained.
 
-						Started with lighter entities with relations pointing
+						Started with lighter entities with relations pointing...
+
 						to an "identity" class to avoid "web out".
 					</section>
 					<section data-markdown>
-						Eventually screwed that and went with
-						straight up "row to object" model.
+						Eventually scrapped that and went with straight up "row to object" model.
 					</section>
 					<section data-markdown>
-						No @ManyToOne, @OneToMany,
-						no collections, nothing.
+						No @ManyToOne, @OneToMany, no collections.
 
-						Just straight up @Column, period.
+						Only @Entity, @Table, @Column.
 					</section>
 					<section data-markdown>
 						Flex5 Entity Example
