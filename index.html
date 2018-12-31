@@ -28,10 +28,10 @@
 
 				<!-- INTRO -->
 				<section>
-					<section>YOU ARE HERE.</section>
+					<section>Hi.</section>
 					<section>Who am I?</section>
 					<section data-markdown>
-						Hi, I'm Roger Diller.
+						Hi, my name is Roger Diller.
 
 						I work as Technical Lead @ Flex Rental Solutions.
 
@@ -42,7 +42,7 @@
 
 						[@rogiller](https://twitter.com/rogiller)
 
-						All tech & leadership related jazz! [mostly]
+						[I tweet tech & leadership related jazz.**]
 					</section>
 				</section>
 
@@ -69,7 +69,7 @@
 					<section data-markdown>
 						Short Disclaimer: This will be an opinionated talk.
 
-						Because of scar tissue I have.
+						Because of "scar tissue" I have.
 					</section>
 					<section data-markdown>
 						Some of these opinions might not apply to your work.
@@ -95,7 +95,7 @@
 					<section data-markdown>
 						It has a LOT of issues.
 
-						But for the purpose of this talk, let's focus on the speed problem.
+						But for the purpose of this talk, we'll focus on the speed problem.
 					</section>
 					<section data-markdown>
 						I mentioned it's a Hibernate app.
@@ -110,24 +110,22 @@
 					<section data-markdown>
 						Hibernate really isn't the core issue.
 
-						It's what you ask it do and being unaware of what it's doing.
+						**It's what you ask it do and being unaware of what it's doing.**
 					</section>
 					<section data-markdown>
-						Yes, you could argue it's overcomplicated tool and is too hard to understand.
+						Yes, you could argue it's over-engineered.
 
-						I can see that as a pretty good argument for not use it. But I'm not here to debate that.
+						**But not here to debate that.**
 					</section>
 					<section data-markdown>
-						I AM suggesting that blaming Hibernate for your speed issues
+						I am suggesting that blaming Hibernate for your speed issues is kinda like....
 
-						is kinda like blaming the UPS for delivering you too many packages
-
-						when you did all the ordering.
+						**blaming the FedEx person for delivering you to many packages.**
 					</section>
 					<section data-markdown>
 						Hibernate is just doing what you asked.
 
-						It's up to you to ask it for reasonable things.
+						**It's up to you to ask it for reasonable things.**
 					</section>
 					<section data-markdown>
 						So what is the core issue?
@@ -135,16 +133,19 @@
 					<section data-markdown>
 						It's your webby object graph.
 					</section>
-					<section>
-						For those unfamiliar what I mean by an object graph,
-						let me show you a Flex4 code example.
+					<section data-markdown>
+						For those unfamiliar what I mean by an object graph....
+
+						Let's look at a Flex4 code example.
 					</section>
 					<section>show ProjectElement, ProjectElementLineItem classes</section>
 				</section>
 				<section>What did an object graph like this lead to?</section>
 				<section>
 					<section data-markdown>
-						Gigantic SQL selects (imagine 50MB of SQL for updating one column on a Quote line item).
+						Gigantic SQL selects
+
+						(imagine 50MB of SQL for updating one column on a Quote line item).
 
 						aka as Hibernate hydrating a whole universe of objects
 					</section>
