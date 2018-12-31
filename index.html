@@ -29,7 +29,9 @@
 				<!-- INTRO -->
 				<section>
 					<section>Hi.</section>
-					<section>Who am I?</section>
+					<section>
+						Who am I?
+					</section>
 					<section data-markdown>
 						Hi, my name is Roger Diller.
 
@@ -37,17 +39,15 @@
 
 						been @ Flex since 2009
 					</section>
-					<section data-markdown>
+					<section data-markdown data-notes="I tweet tech & leadership related jazz.**">
 						Follow me on Twitter!
 
 						[@rogiller](https://twitter.com/rogiller)
-
-						[I tweet tech & leadership related jazz.**]
 					</section>
 				</section>
 
 				<!-- TITLE -->
-				<section data-markdown>
+				<section data-markdown data-notes="Want interactivity. Ask questions, discuss.">
 					<textarea data-template>
 						## Real World Scalable SQL
 
@@ -66,7 +66,7 @@
 				</section>
 
 				<section>
-					<section data-markdown>
+					<section data-markdown data-notes="Scar tissue == previous hard times">
 						Short Disclaimer: This will be an opinionated talk.
 
 						Because of "scar tissue" I have.
@@ -280,42 +280,45 @@
 
 				</section>
 
-				<section data-markdown>
+				<section data-markdown data-notes="Sometimes I feel like nobody does data access right...">
 					Let's look as some data layer choices we evaluated...
-
-					Sometimes I feel like nobody does data access right...
 				</section>
 
 				<section>
-					<section>JdbcTemplate Example</section>
+					<section data-markdown>
+						Spring JdbcTemplate
+
+						[baeldung.com/spring-jdbc-jdbctemplate](https://www.baeldung.com/spring-jdbc-jdbctemplate)
+					</section>
 					<section data-markdown>
 						```groovy
 						List&lt;Permission&gt; findPermissionsForUser(String userId){
 
-						if(StringUtils.isBlank(userId)){
-						return Collections.emptyList()
-						}
-
-						userId = StringUtils.trim(userId)
-
-						return jdbcTemplate.query('SELECT permission AS name, denied AS denied FROM rh_user_permissions WHERE userprofileid = ?', new RowMapper&lt;Permission&gt;() {
-						@Override
-						Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
-						return new Permission(name: rs.getString('name'), denied: rs.getBoolean("denied"))
-						}
-						}, userId)
+							return jdbcTemplate.query('SELECT permission AS name, denied AS denied FROM rh_user_permissions WHERE userprofileid = ?',
+								new RowMapper&lt;Permission&gt;() {
+									@Override
+									Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
+										return new Permission(name: rs.getString('name'), denied: rs.getBoolean("denied"))
+									}
+								}, userId)
 						}
 						```
 					</section>
 					<section data-markdown>
-						Yuck.
+						Ewww.
 
-						Repeat after me. YOU SHOULD NOT HAVE TO MANUALLY MAP YOUR RESULTS. PERIOD.
+						Repeat after me...
+
+						YOU SHOULD NOT HAVE TO MANUALLY MAP YOUR RESULTS.
 					</section>
 				</section>
 
 				<section>
-					<section>sql2o Example</section>
+					<section data-markdown>
+						sql2o Example
+
+						[sql2o.org](https://www.sql2o.org/)
+					</section>
 					<section data-markdown>
 						```java
 						public List&lt;Customer&gt; fetchCustomers(customerId) {
@@ -332,14 +335,20 @@
 						```
 					</section>
 					<section data-markdown>
-						Way way to much boilerplate.
+						I like the "executeAndFetch" into class, but...
 
-						You should NOT need a method body for normal record to POJO. Period.
+						Still too much boilerplate.
+
+						You should NOT need to worry about a connection or even have method body.
 					</section>
 				</section>
 
 				<section>
-					<section>JDBI Example</section>
+					<section data-markdown>
+						JDBI Example
+
+						[jdbi.org](http://jdbi.org/)
+					</section>
 					<section data-markdown>
 						```java
 						@SqlUpdate("INSERT INTO user(id, name) VALUES (:id, :name)")
@@ -353,10 +362,10 @@
 						List&lt;User&gt; listUsers();
 						```
 					</section>
-					<section data-markdown>
-						Getting closer but still to much boilerplate.
+					<section data-markdown data-notes="Honestly, JDBI is the next closest one that intrigues me.">
+						Getting much closer but still a little too much boilerplate.
 						```java
-						@RegisterBeanMapper(User.class) //makes me shiver.
+						@RegisterBeanMapper(User.class) //makes me cringe a bit.
 						```
 					</section>
 				</section>
@@ -364,19 +373,25 @@
 				<section data-markdown>
 					So what makes a great data layer tool?
 
+					The absolute minimal boilerplate possible IMO.
+				</section>
 
-					The absolute minimal boilerplate possible.
-
-
+				<section data-markdown>
 					It should allow you to focus on your actual query and virtually nothing else.
 
-					**aka writing SQL shouldn't feel like sandpaper. It should be fun!**
+					aka writing SQL shouldn't feel like sandpaper to your fingers.
+
+					**It should be fun!**
 				</section>
 
 				<section>The tools we picked.</section>
 
 				<section>
-					<section>Spring Data</section>
+					<section data-markdown="">
+						Spring Data JPA
+
+						[baeldung.com/the-persistence-layer-with-spring-data-jpa](https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)
+					</section>
 					<section data-markdown>
 						Spring Data was our starter data layer.
 					</section>
@@ -401,24 +416,24 @@
 						List&lt;SalesTaxRuleIdentity&gt; findAllIdentitiesEnabledForDefinitionId(String enabledForDefinitionId)
 						```
 					</section>
-					<section>
+					<section data-markdown="">
 						What I like?
 						- Zero boilerplate.
-						- The target entity and it's corresponding property types are just figured out and hydrated.
+						- The target entity and it's corresponding property types are figured out and hydrated.
 						- The parameters are just mapped in by ordinal (you can do named ones).
-						- You deal at the class level & property level.
-						- It's declarative and frickin' readable.
-						- The JPQL queries are validated at startup.
+						- You work at the class & property level.
+						- It's declarative and SO SO readable.
+						- The JPQL queries are validated at startup. Less integration tests!
 					</section>
-					<section>
+					<section data-markdown="">
 						What I don't like?
 						- It's still uses Hibernate under the cover. Meh. Scar tissue.
 						- Session cache sucks when you have other data access tools in your app.
-						   - e.g. you insert with JOOQ, but JPA doesn't know.
+						   - e.g. you insert with JOOQ, but JPA doesn't know it.
 						- You have to explicitly flush for it to go the database (before the transaction ends).
 						- Generated SQL output is a bit ugly.
 						- You are 1 degree removed from SQL. Which is normally fine, until it isn't.
-						  - You want to use a SQL feature JQL doesn't support.
+						  - You want to use a SQL feature JPQL doesn't support.
 					</section>
 				</section>
 
@@ -426,12 +441,12 @@
 					<section data-markdown>
 						JOOQ
 
-						[JOOQ website](https://jooq.org)
+						[jooq.org](https://jooq.org)
 					</section>
 					<section data-markdown>
-						Spring Data has limits in terms of criteria based query building.
+						Spring Data has limits in terms of dynamic query building.
 
-						We found JOOQ and fell in love. Er, at least some of us did.
+						We found JOOQ and fell in love. Er, at least we kinda did.
 					</section>
 					<section data-markdown>
 						It has a builder pattern that is really powerful, if a bit non-awesome to read.
@@ -449,7 +464,7 @@
 						}
 						```
 					</section>
-					<section>
+					<section data-markdown>
 						What I like?
 						- Powerful builder pattern.
 						- Perfect for dynamic queries.
@@ -457,39 +472,13 @@
 						- Solid POJO mapping abilities (can interpret @Column JPA annotations).
 						- Type-safe SQL queries.
 					</section>
-					<section>
+					<section data-markdown>
 						What I don't like?
 						- Hard to read large queries. aka more difficult to maintain.
 						- Requires a method body.
 						- Probably hard for a junior or new to JOOQ dev to grok.
 						- It wants you to use it's "generate jazz" feature which feels really messy.
 						  - We didn't. We created our own fields. Which takes up some time.
-					</section>
-				</section>
-
-				<section>
-					<section data-markdown>
-						Honorable Mentions
-					</section>
-					<section data-markdown>
-						JDBCTemplate
-					</section>
-					<section data-markdown>
-						Spring Data was more powerful and we could do native SQL via it as well.
-					</section>
-					<section data-markdown>
-						myBatis
-					</section>
-					<section data-markdown>
-						Again, Spring Data already solved most of what it brought.
-					</section>
-					<section data-markdown>
-						SQL20
-
-						JDBO
-					</section>
-					<section data-markdown>
-						Probably to immature or not advanced enough.
 					</section>
 				</section>
 
@@ -504,7 +493,7 @@
 						We'll normally bag up some ID's and fetch all at once, etc.
 					</section>
 					<section data-markdown>
-						We use a SPARSE select often.
+						We use a SPARSE select when pull big classes.
 
 						We have a bunch of tables that have 100's of columns.
 					</section>
