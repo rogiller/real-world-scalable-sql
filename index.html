@@ -245,7 +245,7 @@
 					<section data-markdown>
 						No @ManyToOne, @OneToMany, no collections.
 
-						Only @Entity, @Table, @Column.
+						Only @Entity, @Table, @Id, @Column.
 					</section>
 					<section data-markdown>
 						Flex5 Entity Example
@@ -253,6 +253,7 @@
 						@Entity
 						@Table(name = Department.TABLE_NAME)
 						class Department extends NameAuditEntity implements BusinessModel {
+
 							public static final String TABLE_NAME = "st_biz_department"
 
 							static class COLUMNS {
@@ -279,13 +280,45 @@
 
 				</section>
 
-				<section>Basically nobody does data access right.</section>
+				<section data-markdown>
+					Let's look as some data layer choices we evaluated...
+
+					Sometimes I feel like nobody does data access right...
+				</section>
+
+				<section>
+					<section>JdbcTemplate Example</section>
+					<section data-markdown>
+						```groovy
+						List&lt;Permission&gt; findPermissionsForUser(String userId){
+
+						if(StringUtils.isBlank(userId)){
+						return Collections.emptyList()
+						}
+
+						userId = StringUtils.trim(userId)
+
+						return jdbcTemplate.query('SELECT permission AS name, denied AS denied FROM rh_user_permissions WHERE userprofileid = ?', new RowMapper&lt;Permission&gt;() {
+						@Override
+						Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
+						return new Permission(name: rs.getString('name'), denied: rs.getBoolean("denied"))
+						}
+						}, userId)
+						}
+						```
+					</section>
+					<section data-markdown>
+						Yuck.
+
+						Repeat after me. YOU SHOULD NOT HAVE TO MANUALLY MAP YOUR RESULTS. PERIOD.
+					</section>
+				</section>
 
 				<section>
 					<section>sql2o Example</section>
 					<section data-markdown>
 						```java
-						public List&lt;Customer&gt; etchCustomers(customerId) {
+						public List&lt;Customer&gt; fetchCustomers(customerId) {
 							try (Connection con = sql2o.open()) {
 								final String query =
 									"SELECT id, name, address " +
@@ -306,34 +339,6 @@
 				</section>
 
 				<section>
-					<section>JdbcTemplate Example</section>
-					<section data-markdown>
-						```groovy
-							List&lt;Permission&gt; findPermissionsForUser(String userId){
-
-								if(StringUtils.isBlank(userId)){
-									return Collections.emptyList()
-								}
-
-								userId = StringUtils.trim(userId)
-
-								return jdbcTemplate.query('SELECT permission AS name, denied AS denied FROM rh_user_permissions WHERE userprofileid = ?', new RowMapper&lt;Permission&gt;() {
-									@Override
-									Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
-										return new Permission(name: rs.getString('name'), denied: rs.getBoolean("denied"))
-									}
-								}, userId)
-							}
-						```
-					</section>
-					<section data-markdown>
-						Yuck.
-
-						Repeat after me. YOU SHOULD NOT HAVE TO MANUALLY MAP YOUR RESULTS. PERIOD.
-					</section>
-				</section>
-
-				<section>
 					<section>JDBI Example</section>
 					<section data-markdown>
 						```java
@@ -349,18 +354,23 @@
 						```
 					</section>
 					<section data-markdown>
-						Nope still to much boilerplate. `@RegisterBeanMapper(User.class)` makes me shiver.
+						Getting closer but still to much boilerplate.
+						```java
+						@RegisterBeanMapper(User.class) //makes me shiver.
+						```
 					</section>
 				</section>
 
-				<section>
+				<section data-markdown>
 					So what makes a great data layer tool?
 
 
 					The absolute minimal boilerplate possible.
 
 
-					It should allow you to focus on your actual query and almost nothing else.
+					It should allow you to focus on your actual query and virtually nothing else.
+
+					**aka writing SQL shouldn't feel like sandpaper. It should be fun!**
 				</section>
 
 				<section>The tools we picked.</section>
@@ -376,6 +386,7 @@
 						Really good at getting records to/from database.
 					</section>
 					<section data-markdown>
+						Spring Data Example
 						```groovy
 						@Query("SELECT o FROM SalesTaxRuleIdentity AS o ORDER BY o.name ASC")
 						List&lt;SalesTaxRuleIdentity&gt; findAllIdentities()
