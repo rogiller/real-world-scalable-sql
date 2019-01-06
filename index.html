@@ -26,16 +26,25 @@
 		<div class="reveal">
 			<div class="slides">
 
+				<!-- TITLE -->
+				<section data-markdown data-notes="Want interactivity. Ask questions, discuss.">
+					<textarea data-template>
+						## Real World Scalable SQL
+
+						a _**story**_ about building a scalable data layer
+					</textarea>
+				</section>
+
 				<!-- INTRO -->
 				<section>
-					<section>Hi.</section>
 					<section>
 						Who am I?
 					</section>
-					<section data-markdown>
+					<section data-markdown
+							 data-notes="The longer you stay, the more responsiblity you get. Good and bad.">
 						Hi, my name is Roger Diller.
 
-						I work as Technical Lead @ Flex Rental Solutions.
+						Technical Lead @ Flex Rental Solutions.
 
 						been @ Flex since 2009
 					</section>
@@ -62,7 +71,7 @@
 				</section>
 
 				<section data-markdown>
-					>> quick side note, we need more talks about solving problems we face in the day to day.
+					>> quick side tangent, we need more talks about solving problems we face in the day to day.
 				</section>
 
 				<section>
@@ -71,16 +80,15 @@
 
 						Because of "scar tissue" I have.
 					</section>
-					<section data-markdown>
+					<section data-markdown
+							 data-notes="Speed will come at cost. So if your prototyping or will only have a few users, it's probably not worth it.">
 						Some of these opinions might not apply to your work.
-
-						[But they might bahahaha.]
 					</section>
 				</section>
 
 				<!-- FLEX4 CONTEXT -->
 				<section>
-					<section>Where does this story begin?</section>
+					<section>Where does the story begin?</section>
 					<section>Let's talk about Flex4 a bit</section>
 					<section data-markdown>
 						Legacy Spring/Hibernate/MySQL application
@@ -105,7 +113,7 @@
 					<section data-markdown>
 						Hibernate is the problem right?! Just don't use it.
 
-						Nuff said, let's go home.
+						?!
 					</section>
 					<section data-markdown>
 						Hibernate really isn't the core issue.
@@ -117,21 +125,21 @@
 
 						**But not here to debate that.**
 					</section>
-					<section data-markdown>
+					<section data-markdown data-notes="FedEx is just the delivery mechanism, not the root cause.">
 						I am suggesting that blaming Hibernate for your speed issues is kinda like....
 
-						**blaming the FedEx person for delivering you to many packages.**
+						**blaming the FedEx person for delivering you too many packages.**
 					</section>
 					<section data-markdown>
 						Hibernate is just doing what you asked.
 
-						**It's up to you to ask it for reasonable things.**
+						**It's up to you to ask it to do reasonable things.**
 					</section>
 					<section data-markdown>
 						So what is the core issue?
 					</section>
 					<section data-markdown>
-						It's your webby object graph.
+						**It's your webby object graph.**
 					</section>
 					<section data-markdown>
 						For those unfamiliar what I mean by an object graph....
@@ -201,7 +209,7 @@
 					<section data-markdown>
 						We tried to trim down object graph.
 
-						Mostly failed. Ripples out to far.
+						Mostly failed. Ripples out to far into the codebase.
 					</section>
 				</section>
 
@@ -235,12 +243,12 @@
 					<section data-markdown>
 						We knew Hibernate needed constrained.
 
-						Started with lighter entities with relations pointing...
+						Started with lighter entities with ManyToOne relations pointing...
 
-						to an "identity" class to avoid "web out".
+						to an lightweight "identity" class to avoid "web out".
 					</section>
 					<section data-markdown>
-						Eventually scrapped that and went with straight up "row to object" model.
+						Eventually scrapped that and went with a straight up "row to object" model.
 					</section>
 					<section data-markdown>
 						No @ManyToOne, @OneToMany, no collections.
@@ -477,7 +485,7 @@
 						- Hard to read large queries. aka more difficult to maintain.
 						- Requires a method body.
 						- Probably hard for a junior or new to JOOQ dev to grok.
-						- It wants you to use it's "generate jazz" feature which feels really messy.
+						- It wants you to use it's "generate POJO" feature which feels really messy.
 						  - We didn't. We created our own fields. Which takes up some time.
 					</section>
 				</section>
@@ -526,7 +534,7 @@
 					<section>Thanks for listening!</section>
 				</section>
 
-				<section>END.</section>
+				<section>THE END.</section>
 			</div>
 		</div>
 
