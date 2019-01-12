@@ -215,60 +215,72 @@
 
 				<section>
 					<section>How did we try to fix it?</section>
-					<section>Hibernate 2nd level cache</section>
+					<section data-markdown="">
+						Hibernate 2nd level cache
+						> it's an "across session cache"
+					</section>
 					<section data-markdown>
-						This might have helped, but my gut is that it ended up hurting more than it helped.
+						This might have helped....
 
-						In areas of high churn, lotsa cache misses, leading to even more N+1.
+						**my gut is it hurt more than it helped.**
+
+						> Areas of high churn create cache misses, leading to even more N+1.
 					</section>
 					<section>Hibernate Collection Batching</section>
 					<section data-markdown>
-						This was probably the most successful performance tweak.
+						The most successful performance tweak.
 
-						It helps avoid N+1 selects by loading multiple collections in one database trip.
+						> Lowers N+1 selects by loading multiple collections in one database trip.
 					</section>
 					<section data-markdown>
 						Seriously, collection batching might be the best tip you take home.
 
 						See [https://docs.jboss.org/hibernate/...](https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#fetching-batch).
 					</section>
-					<section data-markdown>
-						We tried native SQL....
+					<section data-markdown data-notes="Non-Hibernate data access creates stale second level cache.">
+						We bypassed Hibernate by hand coding SQL...
 
-						Often we just gave up on Hibernate and hand coded the SQL.
-
-						[But then you really gotta watch for bizarre second level cache issues.]
+						> But then Hibernate Second Level cache starts to bite you.
 					</section>
 					<section data-markdown>
 						We built Ad Hoc Caches in hotspot areas.
+
+						> But then you get cache eviction issues.
 					</section>
-					<section data-markdown>
+					<section data-markdown data-notes="Without good tests, we can't change the code with confidence.">
 						We tried to trim down object graph.
 
-						Mostly failed. Ripples out to far into the codebase.
+						> Mostly failed. Ripples out to far into the codebase.
 					</section>
 				</section>
 
 				<section>
 					<section>What was the solution?</section>
-					<section data-markdown>
+					<section data-markdown data-notes="Bryon, should we start a new backend?!">
 						After much hand wringing...
 
-						We realized the Flex4 backend was fundamentally unscalable.
+						**We decided the Flex4 backend was categorically unscalable.**
 					</section>
-					<section data-markdown>
-						A New Backend Was Needed.
+					<section data-markdown data-notes="This happened in early Nov 2016.">
+						A new backend was needed.
 
 						We started a new Spring Boot/Data/Security backend...
 
 						**on top of the existing database.**
 
-						Read [StranglerApplication](https://www.martinfowler.com/bliki/StranglerApplication.html)
+						> this new backend is known as "Flex5"
+					</section>
+					<section data-markdown
+							 data-notes="This allows for parallel systems, and incremental take over from the new system.">
+						Our rewrite approach is the "strangler pattern".
+
+						Read [StranglerApplication](https://www.martinfowler.com/bliki/StranglerApplication.html) for
+						more info.
 					</section>
 					<section data-markdown>
-						It now works in parallel with the Flex4 backend.
+						Flex5 is live now and works in parallel with Flex4.
 
-						How we got the two systems to play nice together is a story for another day.
+						> How we got the two systems to play nice is a story for another day.
 
 						Spoiler: Just Google "Hazelcast".
 					</section>
