@@ -70,18 +70,21 @@
 					[https://rogiller.github.io/real-world-scalable-sql/](https://rogiller.github.io/real-world-scalable-sql/)
 				</section>
 
-				<section data-markdown>
-					>> quick side tangent, we need more talks about solving problems we face in the day to day.
+				<section data-markdown
+						 data-notes="I've noticed this at local meetups, local community conferences, and big conferences.">
+					> quick plug...
+
+					> We need more talks about solving problems we face in our day jobs.
 				</section>
 
 				<section>
 					<section data-markdown data-notes="Scar tissue == previous hard times">
-						Short Disclaimer: This will be an opinionated talk.
+						Disclaimer: This will be an opinionated talk.
 
 						Because of "scar tissue" I have.
 					</section>
 					<section data-markdown
-							 data-notes="Speed will come at cost. So if your prototyping or will only have a few users, it's probably not worth it.">
+							 data-notes="For example, coding speed will come at time cost. So if your prototyping or will only have a few users, it's probably not worth it.">
 						Some of these opinions might not apply to your work.
 					</section>
 				</section>
@@ -89,21 +92,25 @@
 				<!-- FLEX4 CONTEXT -->
 				<section>
 					<section>Where does the story begin?</section>
-					<section>Let's talk about Flex4 a bit</section>
+					<section>Let's talk about Flex4 a bit.</section>
 					<section data-markdown>
-						Legacy Spring/Hibernate/MySQL application
+						It's a legacy Java single tenant app.
 
-						started in 2003'ish
+						- Spring/Hibernate/Jetty/MySQL
+
+						- started in 2003'ish
 					</section>
 					<section data-markdown>
-						Built rapidly w/o a lot of thought about maintainability or speed.
+						It was built super rapidly.
 
-						Large methods & classes (13,000+ line classes!)
+						- speed was never really considered
+						- little thought about structural stuff
+						- Large methods & classes (13,000+ line class!)
 					</section>
 					<section data-markdown>
 						It has a LOT of issues.
 
-						But for the purpose of this talk, we'll focus on the speed problem.
+						We will focus on it's speed problem.
 					</section>
 					<section data-markdown>
 						I mentioned it's a Hibernate app.
@@ -111,14 +118,16 @@
 						BEGIN ORM/HIBERNATE HATE NOW.
 					</section>
 					<section data-markdown>
-						Hibernate is the problem right?! Just don't use it.
+						Hibernate is the problem right?!
 
-						?!
+						Just don't use it!
 					</section>
 					<section data-markdown>
 						Hibernate really isn't the core issue.
 
-						**It's what you ask it do and being unaware of what it's doing.**
+						**It's what YOU ask it to DO**
+
+						and unawareness of it's MO is the killer.
 					</section>
 					<section data-markdown>
 						Yes, you could argue it's over-engineered.
@@ -126,15 +135,17 @@
 						**But not here to debate that.**
 					</section>
 					<section data-markdown data-notes="FedEx is just the delivery mechanism, not the root cause.">
-						I am suggesting that blaming Hibernate for your speed issues is kinda like....
+						I am suggesting that blaming Hibernate is like....
 
-						**blaming the FedEx person for delivering you too many packages.**
+						**blaming FedEx for delivering you too many packages.**
 					</section>
 					<section data-markdown>
 						Hibernate is just doing what you asked.
 
 						**It's up to you to ask it to do reasonable things.**
 					</section>
+				</section>
+				<section>
 					<section data-markdown>
 						So what is the core issue?
 					</section>
@@ -146,20 +157,25 @@
 
 						Let's look at a Flex4 code example.
 					</section>
-					<section>show ProjectElement, ProjectElementLineItem classes</section>
+					<section data-markdown>
+						Let's look at these Flex4 classes...
+
+						- ProjectElement
+						- ProjectElementLineItem
+					</section>
 				</section>
 				<section>
 					<section>What did an object graph like this lead to?</section>
 					<section data-markdown>
-						Gigantic SQL selects
+						Absolute out of control SQL.
 
-						(imagine 50MB of SQL for updating one column on a Quote line item).
+						I've seen 30MB+ SQL for updating one value on a line item.
 
-						aka as Hibernate hydrating a whole universe of objects
+						> aka Hibernate loading the universe
 					</section>
 
 					<section>
-						Let's watch a video
+						Let's watch a boring video.
 
 						<sub><sub><sub><sub><sub>on 1.5x speed</sub></sub></sub></sub></sub>
 					</section>
@@ -173,22 +189,27 @@
 					</section>
 
 					<section data-markdown>
-						Again not really Hibernate's fault.
+						That video demos the insane object graph.
 
-						You created the relationship mappings, it's doing what you asked.
+						Again... you create the relationship mappings...
+
+						**It's does what you ask it to.**
+					</section>
+					<section>
+						What are the key graph woes?
 					</section>
 					<section data-markdown>
-						N+1 selects (mainly from lazy loaded collections).
+						- N+1 selects (lazy loaded collections**)
 					</section>
 					<section data-markdown>
-						Impossible Hibernate Collection bugz.
+						- Impossible Hibernate Collection bugz
 
-						Database IO counts through the roof.
+						- Database IO counts through the roof
 					</section>
 					<section data-markdown>
-						Database timeout/locks from high load.
+						- Database timeout/locks from high load
 
-						Massive memory usage due to large amounts of data in memory per request.
+						- Massive memory spikes (stack objects)
 					</section>
 				</section>
 
