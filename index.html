@@ -211,8 +211,10 @@
 
 						- Massive memory spikes (stack objects)
 					</section>
+					<section>
+						What questions do you have about all that context?
+					</section>
 				</section>
-
 				<section>
 					<section>How did we try to fix it?</section>
 					<section data-markdown="">
@@ -251,6 +253,9 @@
 						We tried to trim down object graph.
 
 						> Mostly failed. Ripples out to far into the codebase.
+					</section>
+					<section>
+						What questions do you have?
 					</section>
 				</section>
 
@@ -291,12 +296,13 @@
 					<section data-markdown>
 						We knew Hibernate needed constrained.
 
-						Started with lighter entities with ManyToOne relations pointing...
+						> We started with lighter entities having ManyToOne relations pointing to lightweight
+						"identity" classes to avoid "web out".
 
-						to an lightweight "identity" class to avoid "web out".
+						Look at `SoundTheme.groovy`.
 					</section>
 					<section data-markdown>
-						Eventually scrapped that and went with a straight up "row to object" model.
+						> Eventually scrapped that and went with a straight up "row to object" model.
 					</section>
 					<section data-markdown>
 						No @ManyToOne, @OneToMany, no collections.
@@ -337,14 +343,16 @@
 				</section>
 
 				<section data-markdown data-notes="Sometimes I feel like nobody does data access right...">
-					Let's look as some data layer choices we evaluated...
+					What data layer tools did we end up using?
+
+					Let's first look at tools we didn't pick...
 				</section>
 
 				<section>
-					<section data-markdown>
+					<section data-markdown data-notes="Probably the easier to get access to and use for simple stuff.">
 						Spring JdbcTemplate
 
-						[baeldung.com/spring-jdbc-jdbctemplate](https://www.baeldung.com/spring-jdbc-jdbctemplate)
+						See [baeldung.com/spring-jdbc-jdbctemplate](https://www.baeldung.com/spring-jdbc-jdbctemplate)
 					</section>
 					<section data-markdown>
 						```groovy
@@ -363,9 +371,7 @@
 					<section data-markdown>
 						Ewww.
 
-						Repeat after me...
-
-						YOU SHOULD NOT HAVE TO MANUALLY MAP YOUR RESULTS.
+						**You should NOT have to manually map your DB results.**
 					</section>
 				</section>
 
@@ -395,7 +401,7 @@
 
 						Still too much boilerplate.
 
-						You should NOT need to worry about a connection or even have method body.
+						> You should NOT need to worry about a connection or even have method body.
 					</section>
 				</section>
 
@@ -405,7 +411,7 @@
 
 						[jdbi.org](http://jdbi.org/)
 					</section>
-					<section data-markdown>
+					<section data-markdown data-notes="I actually kinda like the looks of JDBI.">
 						```java
 						@SqlUpdate("INSERT INTO user(id, name) VALUES (:id, :name)")
 						void insertNamed(@Bind("id") int id, @Bind("name") String name);
@@ -421,7 +427,7 @@
 					<section data-markdown data-notes="Honestly, JDBI is the next closest one that intrigues me.">
 						Getting much closer but still a little too much boilerplate.
 						```java
-						@RegisterBeanMapper(User.class) //makes me cringe a bit.
+						@RegisterBeanMapper(User.class) //this makes me cringe a bit.
 						```
 					</section>
 				</section>
