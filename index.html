@@ -432,21 +432,22 @@
 					</section>
 				</section>
 
-				<section data-markdown>
-					So what makes a great data layer tool?
+				<section>
+					<section data-markdown>
+						So what makes a great data layer tool?
 
-					The absolute minimal boilerplate possible IMO.
+						The absolute minimal boilerplate possible IMO.
+					</section>
+					<section data-markdown data-notes="We have business code to port!!">
+						**It should allow you to focus on your query.**
+
+						> aka writing SQL shouldn't feel like sandpaper to your fingers.
+
+						**It should be fun!**
+					</section>
 				</section>
 
-				<section data-markdown>
-					It should allow you to focus on your actual query and virtually nothing else.
-
-					aka writing SQL shouldn't feel like sandpaper to your fingers.
-
-					**It should be fun!**
-				</section>
-
-				<section>The tools we picked.</section>
+				<section>What tools did we pick?</section>
 
 				<section>
 					<section data-markdown="">
@@ -508,14 +509,17 @@
 					<section data-markdown>
 						Spring Data has limits in terms of dynamic query building.
 
-						We found JOOQ and fell in love. Er, at least we kinda did.
+						We found JOOQ to fit that need really well.
 					</section>
 					<section data-markdown>
-						It has a builder pattern that is really powerful, if a bit non-awesome to read.
+						It has a builder pattern that is really powerful.
 
-						Spring Data is our default GOTO until the problem feels like JOOQ land.
+						However, a bit non-awesome to read.
+
+						> Spring Data is our default GOTO until the problem feels like JOOQ land.
 					</section>
 					<section data-markdown>
+						JOOQ Query Example
 						```groovy
 						List&lt;InventoryGroup&gt; findByParentGroupId(String parentId)  {
 							return jooq.select(ID, GROUP_NAME, FULL_DISPLAY_STRING, ICON_ID, MANAGEMENT_GROUP_ID)
@@ -546,40 +550,63 @@
 
 				<section>
 					<section>Is it working?</section>
-					<section data-markdown>
-						By and large, it's been a huge success in terms of speed.
-
+					<section data-markdown
+							 data-notes="You can still easily have a FOR loop that calls the DB each time.">
+						YES, it's been a huge success for Flex5 speed.
+					</section>
+					<section>
+						Things we still do...
+					</section>
+					<section>
 						We still have to watch out for database round trips.
 					</section>
 					<section data-markdown>
-						We'll normally bag up some ID's and fetch all at once, etc.
+						Since we only have ID's references...
+
+						We try to bag them up and fetch all at once, etc.
 					</section>
 					<section data-markdown>
-						We use a SPARSE select when pull big classes.
+						We use a SPARSE select when pulling big classes.
 
 						We have a bunch of tables that have 100's of columns.
 					</section>
 					<section data-markdown>
-						We'll do a sparse "use case select".
-
-						e.g. "findSparseByIdForPrepProcess"
+						Sparse SELECT example
+						```groovy
+						@Query('''
+							SELECT
+							eqDef.id as id,
+							eqDef.prepManifestTypeId as prepManifestTypeId,
+							eqDef.prepAutoScanMode as prepAutoScanMode,
+							eqDef.prepAutoScanMatchMode as prepAutoScanMatchMode,
+							eqDef.autoPopulateNumberEnabled as autoPopulateNumberEnabled,
+							eqDef.numberingSchemeId as numberingSchemeId,
+							eqDef.numbered as numbered
+							FROM EquipmentListDefinition AS eqDef
+							WHERE eqDef.id = ?1
+							''')
+						Map findSparseByIdForPrepProcess(String definitionId)
+						```
+					</section>
+					<section data-markdown data-notes="We are building Flex5 cacheless.">
+						> Caching is a smell if it's your first instinct.
 					</section>
 					<section data-markdown>
 						We use recursive database functions.
 
-						They help us locate id sets for parent/child relation ships.
+						They help us locate id sets for parent/child relationships.
 					</section>
 				</section>
 
 				<section>
-					<section>How does the our data layer translate to JSON?</section>
+					<section>And finally, how does our data layer translate to JSON?</section>
 					<section data-markdown>
 						The beauty of this approach is that we have no domain/DTO translation layer.
 					</section>
-					<section data-markdown>
+					<section data-markdown data-notes="So essential we solve SQL & JSON size with one solution.">
 						The data comes out lean from the database.
 
-						Our entities serialize directly out across the wire.
+						> and our entities serialize directly across the wire.
 					</section>
 				</section>
 
