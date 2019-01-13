@@ -117,11 +117,10 @@
 					<section>
 						<p>I mentioned it's built with HIBERNATE.</p>
 						<img class="fragment" height="500" data-src="https://memegenerator.net/img/instances/69590868/i-was-told-they-would-get-angry.jpg">
-					</section>
-					<section data-markdown>
-						Hibernate is the problem right?!
-
-						Just don't use it!
+						<aside class="notes" data-markdown>
+							- Hibernate is the problem right?!
+							- Just don't use it!
+						</aside>
 					</section>
 					<section data-markdown>
 						Hibernate really isn't the core issue.
@@ -129,27 +128,25 @@
 						**It's what YOU ask it to DO**
 
 						and unawareness of it's MO is the killer.
-					</section>
-					<section data-markdown>
+
+						Note:
 						Yes, you could argue it's over-engineered.
 
 						**But not here to debate that.**
 					</section>
-					<section data-notes="FedEx is just the delivery mechanism, not the root cause.">
-						<p>Blaming Hibernate is like blaming the poor delivery person...</p>
-
+					<section data-notes="The delivery guy is just doing his job, he's not responsible.">
 						<img height="500"
 							 src="https://i.pinimg.com/originals/24/f7/09/24f709b20acb24bcd2ef9927cd37bf63.jpg">
-					</section>
-					<section data-markdown>
-						Hibernate is just doing what you asked.
-
-						**It's up to you to ask it to do reasonable things.**
+						<p class="fragment">Blaming Hibernate is like blaming delivery for too many packages.</p>
+						<aside class="notes" data-markdown>
+							Hibernate is just doing what you asked.
+							**It's up to you to ask it to do reasonable things.**
+						</aside>
 					</section>
 				</section>
 				<section>
 					<section data-markdown>
-						So what is the core issue?
+						So, what's the real issue?
 					</section>
 					<section>
 						<img height="500"
@@ -167,7 +164,7 @@
 					<section data-markdown>
 						Absolute out of control SQL.
 
-						I've seen 30MB+ SQL for updating one value on a line item.
+						I've seen 30MB+ of SQL text generated for updating one line item column.
 
 						> aka Hibernate loading the universe
 					</section>
