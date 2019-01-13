@@ -463,19 +463,21 @@
 						Really good at getting records to/from database.
 					</section>
 					<section data-markdown>
-						Spring Data Example
+						Spring Data Query Examples
 						```groovy
 						@Query("SELECT o FROM SalesTaxRuleIdentity AS o ORDER BY o.name ASC")
 						List&lt;SalesTaxRuleIdentity&gt; findAllIdentities()
 
-						@Query('''
-							SELECT ruleIdentity
-							FROM FinancialDocumentDefinitionEnabledSalesTaxRule AS enabledRule
-							INNER JOIN SalesTaxRuleIdentity AS ruleIdentity ON ruleIdentity.id = enabledRule.salesTaxRuleId
-							WHERE enabledRule.definitionId = ?1
-							ORDER BY ruleIdentity.name ASC
+						@Query("SELECT icon FROM IconNode icon WHERE icon.name LIKE CONCAT('%',?1,'%') ORDER BY icon.name ASC")
+						Page&lt;IconNode&gt; searchIconNodes(String searchText, Pageable pageable)
+
+						@Query(value = '''
+							SELECT CASE WHEN (count(p.documentNumber) > 0)
+								THEN TRUE ELSE FALSE END AS document_number_exists
+							FROM ProjectElement p
+							WHERE p.documentNumber = ?1
 						''')
-						List&lt;SalesTaxRuleIdentity&gt; findAllIdentitiesEnabledForDefinitionId(String enabledForDefinitionId)
+						boolean documentNumberExists(String documentNumber)
 						```
 					</section>
 					<section data-markdown="">
