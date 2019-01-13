@@ -397,176 +397,142 @@
 					</aside>
 				</section>
 
-				<section>
-					<section data-markdown>
-						So what makes a great data layer tool?
-
-						The absolute minimal boilerplate possible IMO.
-					</section>
-					<section data-markdown data-notes="We have business code to port!!">
-						**It should allow you to focus on your query.**
-
-						> aka writing SQL shouldn't feel like sandpaper to your fingers.
-
-						**It should be fun!**
-					</section>
-				</section>
+                <section>
+                    <p>So what makes a great data layer tool?</p>
+                    <p class="fragment fade-in-then-semi-out">The absolute minimal boilerplate possible IMO.</p>
+                    <p class="fragment fade-in-then-semi-out" data-markdown>It should allow you to focus on your query.</p>
+                    <p class="fragment fade-in-then-semi-out" data-markdown>**It should be fun!**</p>
+                    <aside class="notes" data-markdown>
+                        - writing SQL shouldn't feel like sandpaper to your fingers.
+                    </aside>
+                </section>
 
 				<section>What tools did we pick?</section>
 
-				<section>
-					<section data-markdown="">
-						Spring Data JPA
+                <section>
+                    <p>Spring Data JPA</p>
+                    <p class="fragment" data-markdown>
+                    ```groovy
+                    @Query("SELECT o FROM SalesTaxRuleIdentity AS o ORDER BY o.name ASC")
+                    List&lt;SalesTaxRuleIdentity&gt; findAllIdentities()
 
-						[baeldung.com/the-persistence-layer-with-spring-data-jpa](https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)
-					</section>
-					<section data-markdown>
-						Spring Data was our starter data layer.
-					</section>
-					<section data-markdown>
-						It has some really cool abstractions.
+                    @Query('''SELECT icon FROM IconNode icon
+                              WHERE icon.name LIKE CONCAT('%',?1,'%') ORDER BY icon.name ASC''')
+                    Page&lt;IconNode&gt; searchIconNodes(String searchText, Pageable pageable)
 
-						Really good at getting records to/from database.
-					</section>
-					<section data-markdown>
-						Spring Data Query Examples
-						```groovy
-						@Query("SELECT o FROM SalesTaxRuleIdentity AS o ORDER BY o.name ASC")
-						List&lt;SalesTaxRuleIdentity&gt; findAllIdentities()
+                    @Query('''
+                        SELECT CASE WHEN (count(p.documentNumber) > 0)
+                            THEN TRUE ELSE FALSE END AS document_number_exists
+                        FROM ProjectElement p WHERE p.documentNumber = ?1
+                    ''')
+                    boolean documentNumberExists(String documentNumber)
+                    ```
+                    </p>
+                    <aside class="notes" data-markdown>
+                        Spring Data was our starter data layer.
 
-						@Query('''SELECT icon FROM IconNode icon
-						          WHERE icon.name LIKE CONCAT('%',?1,'%') ORDER BY icon.name ASC''')
-						Page&lt;IconNode&gt; searchIconNodes(String searchText, Pageable pageable)
+                        It has some really cool abstractions.
 
-						@Query('''
-							SELECT CASE WHEN (count(p.documentNumber) > 0)
-								THEN TRUE ELSE FALSE END AS document_number_exists
-							FROM ProjectElement p WHERE p.documentNumber = ?1
-						''')
-						boolean documentNumberExists(String documentNumber)
-						```
-						Note:
-						What I like?
-						- Zero boilerplate
-						- Your entity object is populated and the data types figured out
-						- You think in terms of classes & properties (vs database columns)
-						- Query validated on startup == less integration tests!
+                        Really good at getting records to/from database.
 
-						What I don't like?
-						- Hibernate under the cover. Feels icky.
-						- Session Cache gets stale with non-JPA DB updates
-						- Explicit flush to been by non-JPA
-						- Generated SQL output is a bit ugly
-						- 1 degree removed from SQL. (Normally fine, until it isn't)
-					</section>
-				</section>
+                        What I like?
+                        - Zero boilerplate
+                        - Your entity object is populated and the data types figured out
+                        - You think in terms of classes & properties (vs database columns)
+                        - Query validated on startup == less integration tests!
 
-				<section>
-					<section data-markdown>
-						JOOQ
+                        What I don't like?
+                        - Hibernate under the cover. Feels icky.
+                        - Session Cache gets stale with non-JPA DB updates
+                        - Explicit flush to been by non-JPA
+                        - Generated SQL output is a bit ugly
+                        - 1 degree removed from SQL. (Normally fine, until it isn't)
+                    </aside>
+                </section>
 
-						[jooq.org](https://jooq.org)
-					</section>
-					<section data-markdown>
-						Spring Data has limits in terms of dynamic query building.
+                <section>
+                    <p>JOOQ</p>
+                    <p class="fragment" data-markdown>
+                    ```java
+                    List&lt;InventoryGroup&gt; findByParentGroupId(String parentId)  {
+                        return jooq.select(ID, GROUP_NAME, FULL_DISPLAY_STRING, ICON_ID, MANAGEMENT_GROUP_ID)
+                            .from(TABLE)
+                            .where(equalToOrIsNull(PARENT_GROUP_ID, parentId))
+                            .orderBy(ORDINAL, GROUP_NAME)
+                            .fetchInto(InventoryGroup)
+                    }
+                    ```
+                    </p>
+                    <aside class="notes" data-markdown>
+                        Spring Data has limits in terms of dynamic query building.
 
-						We found JOOQ to fit that need really well.
-					</section>
-					<section data-markdown>
-						It has a builder pattern that is really powerful.
+                        We found JOOQ to fit that need really well.
 
-						However, a bit non-awesome to read.
+                        It has a builder pattern that is really powerful.
 
-						> Spring Data is our default GOTO until the problem feels like JOOQ land.
-					</section>
-					<section data-markdown>
-						JOOQ Query Example
-						```java
-						List&lt;InventoryGroup&gt; findByParentGroupId(String parentId)  {
-							return jooq.select(ID, GROUP_NAME, FULL_DISPLAY_STRING, ICON_ID, MANAGEMENT_GROUP_ID)
-								.from(TABLE)
-								.where(equalToOrIsNull(PARENT_GROUP_ID, parentId))
-								.orderBy(ORDINAL, GROUP_NAME)
-								.fetchInto(InventoryGroup)
-						}
-						```
-						Note:
-						What I like?
-						- Powerful builder pattern
-						- Perfect for dynamic queries
-						- Fantastic re-usability
-						- Solid POJO mapping abilities (can interpret @Column JPA annotations)
-						- Type-safe SQL queries
+                        However, a bit non-awesome to read.
 
-						What I don't like?
-						- Hard to read large queries
-						- Requires a method body
-						- Not new dev friendly
-						- It's "generate POJO" feature. Feels icky. We don't use.
-					</section>
-				</section>
+                        Spring Data is our default GOTO until the problem feels like JOOQ land.
+
+                        What I like?
+                        - Powerful builder pattern
+                        - Perfect for dynamic queries
+                        - Fantastic re-usability
+                        - Solid POJO mapping abilities (can interpret @Column JPA annotations)
+                        - Type-safe SQL queries
+
+                        What I don't like?
+                        - Hard to read large queries
+                        - Requires a method body
+                        - Not new dev friendly
+                        - It's "generate POJO" feature. Feels icky. We don't use.
+
+                    </aside>
+                </section>
 
 				<section>
-					<section>Is it working?</section>
-					<section data-markdown
-							 data-notes="You can still easily have a FOR loop that calls the DB each time.">
-						YES, it's been a huge success for Flex5 speed.
+					<section>
+                        <p>Is it working?</p>
+                        <p class="fragment" data-markdown>**YES, it's been a huge success for Flex5 speed.**</p>
+                    </section>
+					<section>
+                        <p>Things we still think about...</p>
+                        <p class="fragment fade-in-then-semi-out">We still have to watch out for database round trips.</p>
+                        <p class="fragment fade-in-then-semi-out">We fetch ID sets to avoid N+1's.</p>
+                        <p class="fragment fade-in-then-semi-out">We use recursive MySQL stored procedures to find parent/child id sets.</p>
 					</section>
 					<section>
-						Things we still do...
-					</section>
-					<section>
-						We still have to watch out for database round trips.
-					</section>
-					<section data-markdown>
-						Since we only have ID's references...
-
-						We try to bag them up and fetch all at once, etc.
-					</section>
-					<section data-markdown>
-						We use a SPARSE select when pulling big classes.
-
-						We have a bunch of tables that have 100's of columns.
-					</section>
-					<section data-markdown>
-						Sparse SELECT example
-						```groovy
-						@Query('''
-							SELECT
-							eqDef.id as id,
-							eqDef.prepManifestTypeId as prepManifestTypeId,
-							eqDef.prepAutoScanMode as prepAutoScanMode,
-							eqDef.prepAutoScanMatchMode as prepAutoScanMatchMode,
-							eqDef.autoPopulateNumberEnabled as autoPopulateNumberEnabled,
-							eqDef.numberingSchemeId as numberingSchemeId,
-							eqDef.numbered as numbered
-							FROM EquipmentListDefinition AS eqDef
-							WHERE eqDef.id = ?1
-							''')
-						Map findSparseByIdForPrepProcess(String definitionId)
-						```
+                        <p>We use a SPARSE select when pulling big classes.</p>
+                        <p class="fragment" data-markdown>
+                            ```groovy
+                            @Query('''
+                                SELECT
+                                eqDef.id as id,
+                                eqDef.prepManifestTypeId as prepManifestTypeId,
+                                eqDef.prepAutoScanMode as prepAutoScanMode,
+                                eqDef.prepAutoScanMatchMode as prepAutoScanMatchMode,
+                                eqDef.autoPopulateNumberEnabled as autoPopulateNumberEnabled,
+                                eqDef.numberingSchemeId as numberingSchemeId,
+                                eqDef.numbered as numbered
+                                FROM EquipmentListDefinition AS eqDef
+                                WHERE eqDef.id = ?1
+                            ''')
+                            Map findSparseByIdForPrepProcess(String definitionId)
+                            ```
+                        </p>
 					</section>
 					<section data-notes="We are building Flex5 cacheless.">
+                        <p>By the way...</p>
 						<img height="500" src="https://www.conditionedairsolutions.com/wp-content/uploads/2017/08/canstockphoto22449518.jpg">
 						<p class="fragment">Caching is a smell if it's your first instinct.</p>
 					</section>
-					<section data-markdown>
-						We use recursive MySQL stored procedures.
-
-						They help us locate id sets for parent/child relationships.
-					</section>
 				</section>
 
 				<section>
-					<section>And finally, how does our data layer translate to JSON?</section>
-					<section data-markdown>
-						The beauty of this approach is that we have no domain/DTO translation layer.
-					</section>
-					<section data-markdown data-notes="So essential we solve SQL & JSON size with one solution.">
-						The data comes out lean from the database.
-
-						> and our entities serialize directly across the wire.
-					</section>
+                    <p>And finally, how does our data layer translate to JSON?</p>
+                    <p class="fragment fade-in-then-semi-out" data-markdown>**The beauty of this approach is that we have no domain/DTO translation layer.**</p>
+                    <p class="fragment fade-in-then-semi-out">The data comes out lean from the database...</p>
+                    <p class="fragment fade-in-then-semi-out">and our entities serialize directly across the wire.</p>
 				</section>
 
 				<section>What questions do you have?</section>
