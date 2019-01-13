@@ -120,10 +120,9 @@
 							- Large methods & classes (13,000+ line class!)
 						</aside>
 					</section>
-					<section data-markdown>
-						It has a LOT of issues.
-
-						We will focus on it's speed problem.
+					<section>
+                        <p>It has a LOT of issues.</p>
+                        <p class="fragment">We will focus on it's speed problem.</p>
 					</section>
 					<section>
 						<p>I mentioned it's built with HIBERNATE.</p>
@@ -263,8 +262,9 @@
 				<section>
 					<section>
 						<p>What was the solution?</p>
-						<p class="fragment fade-in-then-semi-out">After much hand wringing...</p>
-						<p class="fragment fade-in-then-semi-out" data-markdown>**We decided the Flex4 backend was categorically unscalable.**</p>
+                        <p class="fragment">After much hand wringing...</p>
+                        <img class="fragment" height="400" src="https://yp.scmp.com/sites/default/files/images/shutterstock_534577573.jpg">
+						<p class="fragment" data-markdown>**We decided the Flex4 backend was categorically unscalable.**</p>
 						<aside class="notes" data-markdown>
 							- Bryon, should we start a new backend?!
 						</aside>
@@ -304,10 +304,10 @@
                                 public static final String TABLE_NAME = "st_biz_location"
 
                                 @Column(name = COLUMNS.LOCAL_CURRENCY_ID)
-                                String localCurrencyId
+                                String localCurrencyId  //Previously was @ManyToOne
 
                                 @Column(name = COLUMNS.ENTITY_ID)
-                                String owningCorporateEntityId
+                                String owningCorporateEntityId //Previously was @ManyToOne
 
                                 @Column(name = COLUMNS.TIME_ZONE)
                                 String timeZone
