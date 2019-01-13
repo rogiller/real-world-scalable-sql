@@ -282,52 +282,52 @@
 				</section>
 
 				<section>
-					<section>How did we architect the data layer?</section>
-					<section data-markdown>
-						We knew Hibernate needed constrained.
-
-						> We started with lighter entities having ManyToOne relations pointing to lightweight
-						"identity" classes to avoid "web out".
-
-						Look at `SoundTheme.groovy`.
+					<section>
+                        <p>How did we architect the data layer?</p>
+                        <p>We knew Hibernate needed some kinda boundary.</p>
+                    </section>
+					<section>
+                        <p>We started by mapping to lightweight "identity" classes.</p>
+                        <img height="650" class="fragment" src="images/SoundTheme.png">
 					</section>
-					<section data-markdown>
-						> Eventually scrapped that and went with a straight up "row to object" model.
-					</section>
-					<section data-markdown>
-						No @ManyToOne, @OneToMany, no collections.
+					<section>
+                        <p>Eventually scrapped that and went with a straight up "row to object" model.</p>
+                        <p class="fragment" data-markdown>
+                            ```groovy
+                            @Entity
+                            @Table(name = BusinessLocation.TABLE_NAME)
+                            class BusinessLocation extends ManagedResource implements BusinessModel {
 
-						Only @Entity, @Table, @Id, @Column.
-					</section>
-					<section data-markdown>
-						Flex5 Entity Example
-						```groovy
-						@Entity
-						@Table(name = Department.TABLE_NAME)
-						class Department extends NameAuditEntity implements BusinessModel {
+                                public static final String TABLE_NAME = "st_biz_location"
+                                public static final org.jooq.Table TABLE = table(TABLE_NAME)
 
-							public static final String TABLE_NAME = "st_biz_department"
+                                static class COLUMNS {
+                                    public static final String LOCAL_CURRENCY_ID = "local_currency_id"
+                                    public static final String ENTITY_ID = "entity_id"
+                                    public static final String TIME_ZONE = "time_zone"
+                                    public static final String LOCALE = "locale"
+                                }
 
-							static class COLUMNS {
-								public static final String DEPT_NAME = "dept_name"
-								public static final String DEPT_CODE = "dept_code"
-								public static final String ABBREVIATION = "abbreviation"
-								public static final String ACCOUNTING_NAME = "accounting_name"
-							}
+                                @Column(name = COLUMNS.LOCAL_CURRENCY_ID)
+                                String localCurrencyId
 
-							@Column(name = COLUMNS.DEPT_NAME, length = 128)
-							String name
+                                @Column(name = COLUMNS.ENTITY_ID)
+                                String owningCorporateEntityId
 
-							@Column(name = COLUMNS.DEPT_CODE, length = 32)
-							String code
+                                @Column(name = COLUMNS.TIME_ZONE)
+                                String timeZone
 
-							@Column(name = COLUMNS.ABBREVIATION, length = 16)
-							String abbreviation
+                                @Column(name = COLUMNS.LOCALE)
+                                String locale
 
-							@Column(name = COLUMNS.ACCOUNTING_NAME, length = 128)
-							String accountingName
-						}
-						```
+                            }
+
+                            ```
+                        </p>
+                        <aside class="notes" data-markdown>
+                            - No @ManyToOne, @OneToMany, no collections
+                            - Basically only @Entity, @Table, @Id, @Column
+                        </aside>
 					</section>
 				</section>
 
