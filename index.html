@@ -468,36 +468,30 @@
 						@Query("SELECT o FROM SalesTaxRuleIdentity AS o ORDER BY o.name ASC")
 						List&lt;SalesTaxRuleIdentity&gt; findAllIdentities()
 
-						@Query("SELECT icon FROM IconNode icon WHERE icon.name LIKE CONCAT('%',?1,'%') ORDER BY icon.name ASC")
+						@Query('''SELECT icon FROM IconNode icon
+						          WHERE icon.name LIKE CONCAT('%',?1,'%') ORDER BY icon.name ASC''')
 						Page&lt;IconNode&gt; searchIconNodes(String searchText, Pageable pageable)
 
-						@Query(value = '''
+						@Query('''
 							SELECT CASE WHEN (count(p.documentNumber) > 0)
 								THEN TRUE ELSE FALSE END AS document_number_exists
-							FROM ProjectElement p
-							WHERE p.documentNumber = ?1
+							FROM ProjectElement p WHERE p.documentNumber = ?1
 						''')
 						boolean documentNumberExists(String documentNumber)
 						```
-					</section>
-					<section data-markdown="">
+						Note:
 						What I like?
-						- Zero boilerplate.
-						- The target entity and it's corresponding property types are figured out and hydrated.
-						- The parameters are just mapped in by ordinal (you can do named ones).
-						- You work at the class & property level.
-						- It's declarative and SO SO readable.
-						- The JPQL queries are validated at startup. Less integration tests!
-					</section>
-					<section data-markdown="">
+						- Zero boilerplate
+						- Your entity object is populated and the data types figured out
+						- You think in terms of classes & properties (vs database columns)
+						- Query validated on startup == less integration tests!
+
 						What I don't like?
-						- It's still uses Hibernate under the cover. Meh. Scar tissue.
-						- Session cache sucks when you have other data access tools in your app.
-						   - e.g. you insert with JOOQ, but JPA doesn't know it.
-						- You have to explicitly flush for it to go the database (before the transaction ends).
-						- Generated SQL output is a bit ugly.
-						- You are 1 degree removed from SQL. Which is normally fine, until it isn't.
-						  - You want to use a SQL feature JPQL doesn't support.
+						- Hibernate under the cover. Feels icky.
+						- Session Cache gets stale with non-JPA DB updates
+						- Explicit flush to been by non-JPA
+						- Generated SQL output is a bit ugly
+						- 1 degree removed from SQL. (Normally fine, until it isn't)
 					</section>
 				</section>
 
@@ -521,7 +515,7 @@
 					</section>
 					<section data-markdown>
 						JOOQ Query Example
-						```groovy
+						```java
 						List&lt;InventoryGroup&gt; findByParentGroupId(String parentId)  {
 							return jooq.select(ID, GROUP_NAME, FULL_DISPLAY_STRING, ICON_ID, MANAGEMENT_GROUP_ID)
 								.from(TABLE)
@@ -530,22 +524,19 @@
 								.fetchInto(InventoryGroup)
 						}
 						```
-					</section>
-					<section data-markdown>
+						Note:
 						What I like?
-						- Powerful builder pattern.
-						- Perfect for dynamic queries.
-						- Fantastic reusability.
-						- Solid POJO mapping abilities (can interpret @Column JPA annotations).
-						- Type-safe SQL queries.
-					</section>
-					<section data-markdown>
+						- Powerful builder pattern
+						- Perfect for dynamic queries
+						- Fantastic re-usability
+						- Solid POJO mapping abilities (can interpret @Column JPA annotations)
+						- Type-safe SQL queries
+
 						What I don't like?
-						- Hard to read large queries. aka more difficult to maintain.
-						- Requires a method body.
-						- Probably hard for a junior or new to JOOQ dev to grok.
-						- It wants you to use it's "generate POJO" feature which feels really messy.
-						  - We didn't. We created our own fields. Which takes up some time.
+						- Hard to read large queries
+						- Requires a method body
+						- Not new dev friendly
+						- It's "generate POJO" feature. Feels icky. We don't use.
 					</section>
 				</section>
 
@@ -593,7 +584,7 @@
 						> Caching is a smell if it's your first instinct.
 					</section>
 					<section data-markdown>
-						We use recursive database functions.
+						We use recursive MySQL stored procedures.
 
 						They help us locate id sets for parent/child relationships.
 					</section>
