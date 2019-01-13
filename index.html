@@ -62,16 +62,12 @@
                     <p class="fragment fade-in-then-semi-out">Follow me on Twitter!</p>
                     <p class="fragment fade-in-then-semi-out" data-markdown>[@rogiller](https://twitter.com/rogiller)</p>
                     <aside class="notes" data-markdown>
-                        - Hi, my name is Roger Diller.
-                        - I am Technical Lead @ Flex Rental Solutions.
-                        - I have been @ Flex since 2009.
-
-
-                        - The longer you stay, the more responsiblity you get. Good and bad.
+                        The longer you stay, the more responsiblity you get. Good and bad.
                         - First 5 years == features, features, Jasper Reports, servers, etc
                         - Next 2 were holding it all together, getting a tech plan together and building a team.
-                        - Last 2 years have been executing and build out the Flex5 thing.
-                        - Follow me on Twitter!
+                        - Last 2 years have been executing and building out the Flex5 thing.
+
+                        Follow me on Twitter!
                     </aside>
 				</section>
 
@@ -84,7 +80,7 @@
 					</textarea>
 				</section>
 
-				<section data-notes="I've noticed this at local meetups, local community conferences, and big conferences.">
+				<section data-notes="This is an observation from local meetups, local community conferences, and big conferences.">
 					<p>A quick plug...</p>
 					<img height="350" src="http://a-bike.co.uk/wp-content/uploads/2015/08/Fotolia_13001438_S.jpg"/>
 					<p class="fragment">We need more talks about solving problems we face in our day jobs.</p>
@@ -137,36 +133,32 @@
 							- Just don't use it!
 						</aside>
 					</section>
-					<section data-markdown>
-						Hibernate really isn't the core issue.
+					<section>
+                        <p>Hibernate really isn't the core issue.</p>
+                        <p class="fragment fade-in-then-semi-out" data-markdown>**It's what YOU ask it to DO.**</p>
+                        <p class="fragment fade-in-then-semi-out">Unawareness of it's MO is the killer.</p>
+                        <aside class="notes" data-markdown>
+                            Yes, you could argue it's over-engineered.
 
-						**It's what YOU ask it to DO**
-
-						and unawareness of it's MO is the killer.
-
-						Note:
-						Yes, you could argue it's over-engineered.
-
-						**But not here to debate that.**
+                            **But not here to debate that.**
+                        </aside>
 					</section>
 					<section data-notes="The delivery guy is just doing his job, he's not responsible.">
 						<img height="500"
 							 src="https://i.pinimg.com/originals/24/f7/09/24f709b20acb24bcd2ef9927cd37bf63.jpg">
-						<p class="fragment">Blaming Hibernate is like blaming delivery for too many packages.</p>
+						<p class="fragment">Blaming Hibernate is like blaming this poor delivery person.</p>
 						<aside class="notes" data-markdown>
-							Hibernate is just doing what you asked.
-							**It's up to you to ask it to do reasonable things.**
+                            - The delivery person is just doing his/her job. You're ordering the crap.
+                            - Hibernate is just doing what you asked.
+                            - It's up to you to ask it to do reasonable things.
 						</aside>
 					</section>
 				</section>
 				<section>
-					<section data-markdown>
-						So, what's the real issue?
-					</section>
 					<section>
-						<img height="500"
-								src="https://2.bp.blogspot.com/-7phNplmNDrw/WP0RMSeR9GI/AAAAAAAAAqw/QhmzzAWIPnwkdM8C90mxYvTcrHysvIAmgCLcB/s1600/cobweb111-777x437.jpg">
-						<p class="fragment">It's your webby object graph.</p>
+                        <p>So, what's the real issue?</p>
+						<img class="fragment" height="500" src="https://2.bp.blogspot.com/-7phNplmNDrw/WP0RMSeR9GI/AAAAAAAAAqw/QhmzzAWIPnwkdM8C90mxYvTcrHysvIAmgCLcB/s1600/cobweb111-777x437.jpg">
+						<p class="fragment" data-markdown>**It's your webby object graph.**</p>
 					</section>
 					<section>
 						For those unfamiliar what I mean by an object graph....
@@ -244,11 +236,16 @@
 						<p class="fragment">What questions do you have about taming Hibernate?</p>
 						<aside class="notes" data-markdown>
 							- Hibernate 2nd level cache (across session cache, probably hurt more than helped, because high churn areas create cache misses, so even more N+1)
-							- Hibernate Collection Batching (best tweak ever, Lowers N+1 selects by loading multiple collections in one database trip)
-							- We bypassed Hibernate by hand coding SQL (Second Level cache can bite you because you are doing stuff behind it's back)
+
+
+							- **Hibernate Collection Batching (best tweak ever, Lowers N+1 selects by loading multiple collections in one database trip)**
+
+
+							- We bypassed Hibernate by hand coding SQL (Second Level staleness will bite you)
 							- We built Ad Hoc Caches in hotspot areas (But then you get cache eviction issues.)
+
+
 							- We tried to trim down object graph (Mostly failed. Ripples out to far into the codebase)
-							- What questions do you have about taming Hibernate?
 						</aside>
 					</section>
 					<section>
@@ -257,6 +254,9 @@
 						<p class="fragment" data-markdown>
 							See [https://docs.jboss.org/hibernate/...](https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#fetching-batch).
 						</p>
+                        <aside class="notes" data-markdown>
+                            Collection batching might be the best tip you take home.
+                        </aside>
 					</section>
 				</section>
 
@@ -274,13 +274,11 @@
 						<p class="fragment fade-in-then-semi-out">We started a new Spring Boot/Data/Security backend...</p>
 						<p class="fragment" data-markdown>**on top of the existing database.**</p>
 						<aside class="notes" data-markdown>
-							- We started a new Spring Boot/Data/Security backend...
-							- **on top of the existing database.**
-							- this new backend is known as "Flex5"
+							- We started a new Spring Boot/Data/Security backend... **on top of the existing database.**
 							- Our rewrite approach is the "strangler pattern".
 							- This allows for parallel systems, and incremental take over from the new system.
 							- Link at end for StranglerApplication
-							- Flex5 is live now and works in parallel with Flex4.
+							- **Flex5 is live now and works in parallel with Flex4.**
 							- How we got the two systems to play nice is a story for another day.
 							- Spoiler: Just Google "Hazelcast".
 						</aside>
@@ -290,7 +288,7 @@
 				<section>
 					<section>
                         <p>How did we architect the data layer?</p>
-                        <p>We knew Hibernate needed some kinda boundary.</p>
+                        <p class="fragment">We knew Hibernate needed some kinda boundary.</p>
                     </section>
 					<section>
                         <p>We started by mapping to lightweight "identity" classes.</p>
@@ -303,16 +301,7 @@
                             @Entity
                             @Table(name = BusinessLocation.TABLE_NAME)
                             class BusinessLocation extends ManagedResource implements BusinessModel {
-
                                 public static final String TABLE_NAME = "st_biz_location"
-                                public static final org.jooq.Table TABLE = table(TABLE_NAME)
-
-                                static class COLUMNS {
-                                    public static final String LOCAL_CURRENCY_ID = "local_currency_id"
-                                    public static final String ENTITY_ID = "entity_id"
-                                    public static final String TIME_ZONE = "time_zone"
-                                    public static final String LOCALE = "locale"
-                                }
 
                                 @Column(name = COLUMNS.LOCAL_CURRENCY_ID)
                                 String localCurrencyId
@@ -322,10 +311,6 @@
 
                                 @Column(name = COLUMNS.TIME_ZONE)
                                 String timeZone
-
-                                @Column(name = COLUMNS.LOCALE)
-                                String locale
-
                             }
 
                             ```
@@ -344,9 +329,9 @@
 
 				<section data-notes="Probably the easier to get access to and use for simple stuff.">
 					<p>
-						Spring JdbcTemplate Example
+						Spring JdbcTemplate
 					</p>
-					<p data-markdown>
+					<p class="fragment" data-markdown>
 						```groovy
 
 						List&lt;Permission&gt; findPermissionsForUser(String userId){
@@ -364,12 +349,16 @@
 
 						```
 					</p>
-					<p class="fragment" data-markdown>**Eh. You should NOT have to manually map your DB results.**</p>
+                    <aside class="notes" data-markdown>
+                        It's easy to get started with since it's part of Spring.
+
+                        **But Eh. You should NOT have to manually map your DB results.**
+                    </aside>
 				</section>
 
 				<section>
-					<p>sql2o Example</p>
-					<p data-markdown>
+					<p>sql2o</p>
+					<p class="fragment" data-markdown>
 						```java
 						public List&lt;Customer&gt; fetchCustomers(customerId) {
 							try (Connection con = sql2o.open()) {
@@ -391,8 +380,8 @@
 				</section>
 
 				<section>
-					<p>JDBI Example</p>
-					<p data-markdown>
+					<p>JDBI</p>
+					<p class="fragment" data-markdown>
 						```java
 						@SqlUpdate("INSERT INTO user(id, name) VALUES (:id, :name)")
 						void insertNamed(@Bind("id") int id, @Bind("name") String name);
@@ -415,9 +404,9 @@
                 <section>
                     <p>So what makes a great data layer tool?</p>
                     <p class="fragment fade-in-then-semi-out">The absolute minimal boilerplate possible IMO.</p>
-                    <p class="fragment fade-in-then-semi-out" data-markdown>It should allow you to focus on your query.</p>
                     <p class="fragment fade-in-then-semi-out" data-markdown>**It should be fun!**</p>
                     <aside class="notes" data-markdown>
+                        - It should allow you to focus on your query.
                         - writing SQL shouldn't feel like sandpaper to your fingers.
                     </aside>
                 </section>
@@ -545,9 +534,10 @@
 
 				<section>
                     <p>And finally, how does our data layer translate to JSON?</p>
+                    <br>
                     <p class="fragment fade-in-then-semi-out" data-markdown>**The beauty of this approach is that we have no domain/DTO translation layer.**</p>
                     <p class="fragment fade-in-then-semi-out">The data comes out lean from the database...</p>
-                    <p class="fragment fade-in-then-semi-out">and our entities serialize directly across the wire.</p>
+                    <p class="fragment">and our entities serialize directly across the wire.</p>
 				</section>
 
 				<section>What questions do you have?</section>
