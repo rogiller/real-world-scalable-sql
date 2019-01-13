@@ -166,58 +166,53 @@
 					</section>
 				</section>
 				<section>
-					<section>What did an object graph like this lead to?</section>
-					<section data-markdown>
-						Absolute out of control SQL.
-
-						I've seen 30MB+ of SQL text generated for updating one line item column.
-
-						> aka Hibernate loading the universe
-					</section>
-
 					<section>
-						Let's watch a boring video.
-
-						<sub><sub><sub><sub><sub>on 1.5x speed</sub></sub></sub></sub></sub>
+						<p>What did an object graph like this lead to?</p>
+						<p class="fragment">Absolutely out of control SQL!</p>
+						<img class="fragment" src="https://sayingimages.com/wp-content/uploads/bring-more-data-office-space-meme.jpg">
+						<aside class="notes" data-markdown>
+							- What did an object graph like this lead to?
+							- Absolutely out of control SQL!
+							- I've seen 30MB+ of SQL text generated for updating one line item column.
+							- aka Hibernate loading the universe
+						</aside>
 					</section>
 
 					<section data-notes="Set Video to 1.5x speed. Possibly skip ahead since it's kinda long.">
+						<p>SQL Madness Video</p>
 						<iframe id="flex4SQLVideo" width="90%" height="550"
 								src="https://www.youtube.com/embed/o-8-a9ktqvw?autoplay=0"
 								frameborder="0"
 								allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 								allowfullscreen></iframe>
-					</section>
-
-					<section data-markdown>
-						That video demos the insane object graph.
-
-						Again... you create the relationship mappings...
-
-						**It's does what you ask it to.**
-					</section>
-                    <section data-markdown>
-                        > btw, p6spy will save your life
-                        > [github.com/p6spy/p6spy](https://github.com/p6spy/p6spy)
-                    </section>
-					<section>
-						What are the key graph woes?
-					</section>
-					<section data-markdown>
-						- N+1 selects (lazy loaded collections**)
-					</section>
-					<section data-markdown>
-						- Impossible Hibernate Collection bugz
-
-						- Database IO counts through the roof
-					</section>
-					<section data-markdown>
-						- Database timeout/locks from high load
-
-						- Massive memory spikes (stack objects)
+						<aside class="notes" data-markdown>
+							- Let's play this video on mute and 2x speed.
+							- btw, I'm using P6spy in the video... it will save your life (link at end of slides)
+							- P6spy wraps your datasource and shows SQL truth.
+							- Hibernate logging "lies"
+							- You can always listen to the video later as I do have commentary on the video.
+							- This video demos the insane object graph.
+							- Again... you create the relationship mappings...
+							- **It's does what you ask it to.**
+						</aside>
 					</section>
 					<section>
-						What questions do you have about all that context?
+						<p>What are the key object graph woes?</p>
+						<ul>
+							<li class="fragment fade-in-then-semi-out">N+1 selects (lazy loaded collections**)</li>
+							<li class="fragment fade-in-then-semi-out">Impossible Hibernate Collection bugz</li>
+							<li class="fragment fade-in-then-semi-out">Database IO counts through the roof</li>
+							<li class="fragment fade-in-then-semi-out">Database timeout/locks from high load</li>
+							<li class="fragment fade-in-then-semi-out">Massive memory spikes (stack objects)</li>
+						</ul>
+						<p class="fragment fade-in-then-semi-out">What questions do you have about all that context?</p>
+						<aside class="notes" data-markdown>
+							- N+1 selects (lazy loaded collections**)
+							- Impossible Hibernate Collection bugz
+							- Database IO counts through the roof
+							- Database timeout/locks from high load
+							- Massive memory spikes (stack objects)
+						</aside>
 					</section>
 				</section>
 				<section>
