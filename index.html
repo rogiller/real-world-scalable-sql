@@ -322,46 +322,39 @@
 					</section>
 				</section>
 
-				<section data-markdown data-notes="Sometimes I feel like nobody does data access right...">
-					What data layer tools did we end up using?
-
-					Let's first look at tools we didn't pick...
+				<section data-notes="Sometimes I feel like nobody does data access right...">
+					<p>What data layer tools did we end up using?</p>
+					<p class="fragment">Let's first look at tools we didn't pick...</p>
 				</section>
 
-				<section>
-					<section data-markdown data-notes="Probably the easier to get access to and use for simple stuff.">
-						Spring JdbcTemplate
-
-						See [baeldung.com/spring-jdbc-jdbctemplate](https://www.baeldung.com/spring-jdbc-jdbctemplate)
-					</section>
-					<section data-markdown>
+				<section data-notes="Probably the easier to get access to and use for simple stuff.">
+					<p>
+						Spring JdbcTemplate Example
+					</p>
+					<p data-markdown>
 						```groovy
+
 						List&lt;Permission&gt; findPermissionsForUser(String userId){
-
-							return jdbcTemplate.query('SELECT permission AS name, denied AS denied FROM rh_user_permissions WHERE userprofileid = ?',
-								new RowMapper&lt;Permission&gt;() {
-									@Override
-									Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
-										return new Permission(name: rs.getString('name'), denied: rs.getBoolean("denied"))
-									}
-								}, userId)
+							return jdbcTemplate.query(
+								   '''SELECT permission AS name, denied AS denied
+									  FROM rh_user_permissions
+									  WHERE userprofileid = ?''',
+							new RowMapper&lt;Permission&gt;() {
+								@Override
+								Permission mapRow(ResultSet rs, int rowNum) throws SQLException {
+									return new Permission(rs.getString('name'), rs.getBoolean("denied"))
+								}
+							}, userId)
 						}
-						```
-					</section>
-					<section data-markdown>
-						Ewww.
 
-						**You should NOT have to manually map your DB results.**
-					</section>
+						```
+					</p>
+					<p class="fragment" data-markdown>**Eh. You should NOT have to manually map your DB results.**</p>
 				</section>
 
 				<section>
-					<section data-markdown>
-						sql2o Example
-
-						[sql2o.org](https://www.sql2o.org/)
-					</section>
-					<section data-markdown>
+					<p>sql2o Example</p>
+					<p data-markdown>
 						```java
 						public List&lt;Customer&gt; fetchCustomers(customerId) {
 							try (Connection con = sql2o.open()) {
@@ -375,23 +368,16 @@
 							}
 						}
 						```
-					</section>
-					<section data-markdown>
-						I like the "executeAndFetch" into class, but...
-
-						Still too much boilerplate.
-
-						> You should NOT need to worry about a connection or even have method body.
-					</section>
+					</p>
+					<aside class="notes" data-markdown>
+						- I like the "executeAndFetch" into class, but... Still too much boilerplate.
+						- You should NOT need to worry about a connection or even have method body.
+					</aside>
 				</section>
 
 				<section>
-					<section data-markdown>
-						JDBI Example
-
-						[jdbi.org](http://jdbi.org/)
-					</section>
-					<section data-markdown data-notes="I actually kinda like the looks of JDBI.">
+					<p>JDBI Example</p>
+					<p data-markdown>
 						```java
 						@SqlUpdate("INSERT INTO user(id, name) VALUES (:id, :name)")
 						void insertNamed(@Bind("id") int id, @Bind("name") String name);
@@ -403,13 +389,12 @@
 						@RegisterBeanMapper(User.class)
 						List&lt;User&gt; listUsers();
 						```
-					</section>
-					<section data-markdown data-notes="Honestly, JDBI is the next closest one that intrigues me.">
-						Getting much closer but still a little too much boilerplate.
-						```java
-						@RegisterBeanMapper(User.class) //this makes me cringe a bit.
-						```
-					</section>
+					</p>
+					<aside class="notes" data-markdown>
+						- I actually kinda like the looks of JDBI.
+						- Getting much closer but still a little too much boilerplate.
+						- @RegisterBeanMapper(User.class) //this makes me cringe a bit.
+					</aside>
 				</section>
 
 				<section>
