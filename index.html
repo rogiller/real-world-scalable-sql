@@ -60,14 +60,16 @@
                     <p class="fragment fade-in-then-semi-out">I am Technical Lead @ Flex Rental Solutions.</p>
                     <p class="fragment fade-in-then-semi-out">I have been @ Flex since 2009.</p>
                     <p class="fragment fade-in-then-semi-out">Follow me on Twitter!</p>
-                    <p class="fragment fade-in-then-semi-out" data-markdown>[@rogiller](https://twitter.com/rogiller)</p>
+                    <p class="fragment" data-markdown>[@rogiller](https://twitter.com/rogiller)</p>
                     <aside class="notes" data-markdown>
                         The longer you stay, the more responsiblity you get. Good and bad.
-                        - First 5 years == features, features, Jasper Reports, servers, etc
+                        - First 5 years == features, features, transition to Flash, QuickBooks Integrations, Jasper Reports, servers, etc
                         - Next 2 were holding it all together, getting a tech plan together and building a team.
                         - Last 2 years have been executing and building out the Flex5 thing.
 
                         Follow me on Twitter!
+
+                        I tweet tech & leadership jazz.**
                     </aside>
 				</section>
 
@@ -80,10 +82,14 @@
 					</textarea>
 				</section>
 
-				<section data-notes="This is an observation from local meetups, local community conferences, and big conferences.">
+				<section>
 					<p>A quick plug...</p>
 					<img height="350" src="http://a-bike.co.uk/wp-content/uploads/2015/08/Fotolia_13001438_S.jpg"/>
 					<p class="fragment">We need more talks about solving problems we face in our day jobs.</p>
+                    <aside class="notes" data-markdown>
+                        - This is an observation from local meetups, local community conferences, and big conferences.
+                        - Instead of Kubernetes, Docker, Serverless, Microservices, blah, blah, blah
+                    </aside>
 				</section>
 
 				<section>
@@ -92,7 +98,7 @@
 							 src="https://s3-us-west-2.amazonaws.com/anchor-generated-image-bank/production/podcast_uploaded/0/0-1532017133130-d0c8ba5c65441.jpg">
 						<p class="fragment fade-in-then-semi-out">This will be an opinionated talk.</p>
 						<p class="fragment fade-in-then-semi-out">Because of "scar tissue" I have.</p>
-						<p class="fragment fade-in-then-semi-out">Some of these opinions might not apply to your work.</p>
+						<p class="fragment">Some of these opinions might not apply to your work.</p>
 					</section>
 				</section>
 
@@ -108,7 +114,7 @@
 							<li class="fragment fade-in-then-semi-out">It was built super rapidly.</li>
 							<li class="fragment fade-in-then-semi-out">Speed was never much of a consideration</li>
 							<li class="fragment fade-in-then-semi-out">little thought about structural stuff</li>
-							<li class="fragment fade-in-then-semi-out">Large methods & classes (13,000+ line class!)</li>
+							<li class="fragment">Large methods & classes (13,000+ line class!)</li>
 						</ul>
 						<aside data-markdown class="notes">
 							- It's a legacy Java single tenant app.
@@ -121,7 +127,7 @@
 						</aside>
 					</section>
 					<section>
-                        <p>It has a LOT of issues.</p>
+                        <p>Flex4 has a LOT of issues.</p>
                         <p class="fragment">We will focus on it's speed problem.</p>
 					</section>
 					<section>
@@ -135,7 +141,7 @@
 					<section>
                         <p>Hibernate really isn't the core issue.</p>
                         <p class="fragment fade-in-then-semi-out" data-markdown>**It's what YOU ask it to DO.**</p>
-                        <p class="fragment fade-in-then-semi-out">Unawareness of it's MO is the killer.</p>
+                        <p class="fragment">Unawareness of it's MO is the killer.</p>
                         <aside class="notes" data-markdown>
                             Yes, you could argue it's over-engineered.
 
@@ -158,6 +164,9 @@
                         <p>So, what's the real issue?</p>
 						<img class="fragment" height="500" src="https://2.bp.blogspot.com/-7phNplmNDrw/WP0RMSeR9GI/AAAAAAAAAqw/QhmzzAWIPnwkdM8C90mxYvTcrHysvIAmgCLcB/s1600/cobweb111-777x437.jpg">
 						<p class="fragment" data-markdown>**It's your webby object graph.**</p>
+                        <aside class="notes">
+                            Not really specific to Hibernate... really any ORM.
+                        </aside>
 					</section>
 					<section>
 						For those unfamiliar what I mean by an object graph....
@@ -203,15 +212,14 @@
 						</aside>
 					</section>
 					<section>
-						<p>What are the key object graph woes?</p>
+						<p>What are the main object graph pain points?</p>
 						<ul>
 							<li class="fragment fade-in-then-semi-out">N+1 selects (lazy loaded collections**)</li>
 							<li class="fragment fade-in-then-semi-out">Impossible Hibernate Collection bugz</li>
 							<li class="fragment fade-in-then-semi-out">Database IO counts through the roof</li>
 							<li class="fragment fade-in-then-semi-out">Database timeout/locks from high load</li>
-							<li class="fragment fade-in-then-semi-out">Massive memory spikes (stack objects)</li>
+							<li class="fragment">Massive memory spikes (stack objects)</li>
 						</ul>
-						<p class="fragment fade-in-then-semi-out">What questions do you have about all that context?</p>
 						<aside class="notes" data-markdown>
 							- N+1 selects (lazy loaded collections**)
 							- Impossible Hibernate Collection bugz
@@ -229,15 +237,15 @@
 							<li class="fragment fade-in-then-semi-out">Hibernate Collection Batching</li>
 							<li class="fragment fade-in-then-semi-out">We bypassed Hibernate by hand coding SQL</li>
 							<li class="fragment fade-in-then-semi-out">We built Ad Hoc Caches in hotspot areas</li>
-							<li class="fragment fade-in-then-semi-out">We bypassed Hibernate by hand coding SQL</li>
-							<li class="fragment fade-in-then-semi-out">We tried to trim down object graph</li>
+							<li class="fragment">We tried to trim down object graph</li>
 						</ul>
-						<p class="fragment">What questions do you have about taming Hibernate?</p>
 						<aside class="notes" data-markdown>
 							- Hibernate 2nd level cache (across session cache, probably hurt more than helped, because high churn areas create cache misses, so even more N+1)
+                            - Don't use 2nd level cache for everything! Be precise and measure!
 
 
 							- **Hibernate Collection Batching (best tweak ever, Lowers N+1 selects by loading multiple collections in one database trip)**
+                            - Just lower your database IO count... that's what you need to focus on first.
 
 
 							- We bypassed Hibernate by hand coding SQL (Second Level staleness will bite you)
@@ -255,6 +263,8 @@
 						</p>
                         <aside class="notes" data-markdown>
                             Collection batching might be the best tip you take home.
+
+                            I have a link at the end.
                         </aside>
 					</section>
 				</section>
@@ -271,6 +281,7 @@
 					</section>
 					<section data-notes="This happened in early Nov 2016.">
 						<p>A new backend was needed.</p>
+                        <br>
 						<p class="fragment fade-in-then-semi-out">We started a new Spring Boot/Data/Security backend...</p>
 						<p class="fragment" data-markdown>**on top of the existing database.**</p>
 						<aside class="notes" data-markdown>
@@ -288,7 +299,11 @@
 				<section>
 					<section>
                         <p>How did we architect the data layer?</p>
-                        <p class="fragment">We knew Hibernate needed some kinda boundary.</p>
+                        <br>
+                        <p class="fragment">We knew the object graph needed some kinda boundary.</p>
+                        <aside class="notes">
+                            We didn't want to repeat history.
+                        </aside>
                     </section>
 					<section>
                         <p>We started by mapping to lightweight "identity" classes.</p>
@@ -403,6 +418,7 @@
 
                 <section>
                     <p>So what makes a great data layer tool?</p>
+                    <br>
                     <p class="fragment fade-in-then-semi-out">The absolute minimal boilerplate possible IMO.</p>
                     <p class="fragment fade-in-then-semi-out" data-markdown>**It should be fun!**</p>
                     <aside class="notes" data-markdown>
