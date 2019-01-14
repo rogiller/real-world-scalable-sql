@@ -371,6 +371,39 @@
 				</section>
 
 				<section>
+					<p>myBatis</p>
+					<p class="fragment" data-markdown>
+						```java
+						public interface VillageMapper {
+							@Results({
+								@Result(property = "vid", column = "id"),
+								@Result(property = "villageName", column = "name"),
+								@Result(property = "district", column = "district")
+							})
+							@Select("SELECT id, name, district from village WHERE id = #{id}")
+							Village selectVillage(int id);
+
+							@Insert("INSERT into village(name,district) VALUES(#{villageName}, #{district})")
+							void insertVillage(Village village);
+
+							@Update("UPDATE village SET name=#{villageName}, district =#{district} WHERE id =#{vid}")
+							void updateVillage(Village village);
+
+							@Delete("DELETE FROM village WHERE id =#{id}")
+							void deleteVillage(int id);
+						}
+						```
+					</p>
+					<aside class="notes" data-markdown>
+						- I do like the interface/annotation driven Query mapper
+						- However, I say XML myBatis jazz on their website (which is kinda icky)
+						- I guess it just seemed kinda dated tool (aka not progressive enough for my tastes)
+						- I just didn't "feel it" when working with this (Spring Data seemed to do all of this and better)
+						- I just think it ended up having more boilerplate than Spring Data.
+					</aside>
+				</section>
+
+				<section>
 					<p>sql2o</p>
 					<p class="fragment" data-markdown>
 						```java
@@ -565,6 +598,7 @@
 						- Hibernate Collection Batching: [docs.jboss.org/hibernate..](https://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#fetching-batch).
 						- Stranger Rewrite Pattern: [martinfowler.com/bliki/Strangler...](https://www.martinfowler.com/bliki/StranglerApplication.html)
 						- JDBCTemplate Tutorial: [baeldung.com/spring-jdbc-jdbctemplate](https://www.baeldung.com/spring-jdbc-jdbctemplate)
+						- myBatis: [mybatis.org/mybatis-3/](http://www.mybatis.org/mybatis-3/)
 						- sql2o: [sql2o.org](https://www.sql2o.org/)
 						- JDBI: [jdbi.org](http://jdbi.org/)
 						- Spring Data Tutorial: [baeldung.com/the-persistence-layer...](https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)
